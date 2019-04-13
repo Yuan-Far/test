@@ -125,7 +125,7 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.ARRAY_ERROR = void 0;
 var ARRAY_ERROR = {
-  'ARRAY_CAPACOTY_ERROR': 'ADD_ERROR--Array is full',
+  'ARRAY_CAPACITY_ERROR': 'ADD_ERROR--Array is full',
   'INSERT_INDEX_ERROR': 'INSERT_INDEX_ERROR--Array out of bounds',
   'GET_ERROR': 'GET_ERROR--Array out of bounds',
   'SET_ERROR': 'SET_ERROR--Array out of bounds'
@@ -139,9 +139,7 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = void 0;
 
-var _ErrorConstants = _interopRequireDefault(require("./utils/ErrorConstants"));
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+var _ErrorConstants = require("./utils/ErrorConstants");
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -173,31 +171,69 @@ function () {
     key: "getSize",
     value: function getSize() {
       return this.size;
-    } // 获取数组容量
+    }
+    /**
+     *
+     * @returns 数组大小 --> 数组的容量（非实际的大小）
+     * @memberof NewArray
+     */
 
   }, {
     key: "getCapacity",
     value: function getCapacity() {
       return this.arr.length;
-    } // 数组判空
+    }
+    /**
+     * @desc 数组判空
+     *
+     * @returns {Boolean}
+     * @memberof NewArray
+     */
 
   }, {
     key: "isEmpty",
     value: function isEmpty() {
       return this.size === 0;
-    } // 插入元素
+    }
+    /**
+     * @desc 数组扩容，仅容量{capacity}；与数组的实际大小无关
+     *
+     * @param {*} capacity
+     * @memberof NewArray
+     */
+
+  }, {
+    key: "resize",
+    value: function resize(capacity) {
+      var newArray = new Array(capacity);
+
+      for (var i = 0; i < this.size; i++) {
+        // 将旧的数组放入新的数组中
+        newArray[i] = this.arr[i];
+      }
+
+      this.arr = newArray;
+    }
+    /**
+     * @desc 插入元素
+     *
+     * @param {*} index 需要插入的索引
+     * @param {*} val 需要插入的元素
+     * @memberof NewArray
+     */
 
   }, {
     key: "insert",
     value: function insert(index, val) {
       // 判满
       if (this.size === this.getCapacity()) {
-        throw new Error(_ErrorConstants.default.ARRAY_CAPACOTY_ERROR);
+        // throw new Error(ARRAY_ERROR.ARRAY_CAPACITY_ERROR);
+        this.resize(this.size * 2);
       } // index是否符合要求
 
 
       if (index < 0 || index > this.size) {
-        throw new Error(_ErrorConstants.default.INSERT_INDEX_ERROR);
+        throw new Error(_ErrorConstants.ARRAY_ERROR.INSERT_INDEX_ERROR);
       }
 
       for (var i = this.size - 1; i >= index; i--) {
@@ -211,7 +247,6 @@ function () {
   }, {
     key: "unshift",
     value: function unshift(val) {
-      console.log(val);
       this.insert(0, val);
     } // 后方插入
 
@@ -224,39 +259,191 @@ function () {
   }, {
     key: "add",
     value: function add(val) {
-      // 判满
+      // 判满 && 扩容
       if (this.size === this.getCapacity()) {
-        throw new Error(_ErrorConstants.default.ARRAY_CAPACOTY_ERROR);
+        this.resize(this.size * 2); // throw new Error(ARRAY_ERROR.ARRAY_CAPACITY_ERROR);
       }
 
       this.arr[this.size] = val;
       this.size++;
-    } // 获取指定位置元素
+    }
+    /**
+     * @desc 获取指定位置元素
+     *
+     * @param {*} index
+     * @returns 返回该索引对应的元素
+     * @memberof NewArray
+     */
 
   }, {
     key: "get",
     value: function get(index) {
       if (index < 0 || index > this.size) {
-        throw new Error(_ErrorConstants.default.GET_ERROR);
+        throw new Error(_ErrorConstants.ARRAY_ERROR.GET_ERROR);
       }
 
       return this.arr[index];
-    } // set
+    }
+    /**
+     * @desc 重置某个索引的元素
+     *
+     * @param {*} index
+     * @param {*} val
+     * @memberof NewArray
+     */
 
   }, {
     key: "set",
     value: function set(index, val) {
-      if (index < 0 || index > this.size) {
-        throw new Error(_ErrorConstants.default.SET_ERROR);
+      if (index < 0 || index >= this.size) {
+        throw new Error(_ErrorConstants.ARRAY_ERROR.SET_ERROR);
       }
 
       this.arr[index] = val;
-    } // 获取数组信息
+    }
+    /**
+     *
+     * @desc 包含元素
+     * @param {*} val 传入元素
+     * @returns 如果arr中包含该元素，则返回true
+     * @memberof NewArray
+     */
+
+  }, {
+    key: "include",
+    value: function include(val) {
+      for (var i = 0; i < this.size; i++) {
+        if (val === this.arr[i]) {
+          return true;
+        }
+      }
+
+      return false;
+    }
+    /**
+     *
+     * @desc 查找元素
+     * @param {*} val 传入元素
+     * @returns 如果包含该元素，则返回元素的索引，否则返回-1(仅返回第一个匹配的位置)
+     * @memberof NewArray
+     */
+
+  }, {
+    key: "find",
+    value: function find(val) {
+      for (var i = 0; i < this.size; i++) {
+        if (val === this.arr[i]) {
+          return i;
+        }
+      }
+
+      return -1;
+    }
+    /**
+     * @desc 批量查找数组中的相同元素
+     *
+     * @param {*} val
+     * @returns 元素在数组中的位置所组成的数组
+     * @memberof NewArray
+     */
+
+  }, {
+    key: "findAll",
+    value: function findAll(val) {
+      var newArray = new NewArray(this.size);
+
+      for (var i = 0; i < this.size; i++) {
+        if (this.arr[i] === val) {
+          newArray.push(i);
+        }
+      }
+
+      return newArray;
+    }
+    /**
+     * @desc 删除索引元素
+     * @todo 被删除元素会以undefined填充
+     * @param {*} index 传入需要删除的索引
+     * @returns 返回被删除的元素
+     * @memberof NewArray
+     */
+
+  }, {
+    key: "remove",
+    value: function remove(index) {
+      console.log('rmove', index, this.size);
+
+      if (index < 0 || index >= this.size) {
+        throw new Error(_ErrorConstants.ARRAY_ERROR.DELETE_INDEX);
+      }
+
+      var element = this.arr[index]; // index后面的元素覆盖前面的元素
+
+      for (var i = index; i < this.size - 1; i++) {
+        this.arr[i] = this.arr[i + 1];
+      }
+
+      this.size--; // 最后一位置空
+
+      this.arr[this.size] = null; // 缩容
+
+      if (Math.floor(this.getCapacity() / 4) === this.size && Math.floor(this.getCapacity() / 2 !== 0)) {
+        this.resize(Math.floor(this.getCapacity() / 2));
+      }
+
+      return element;
+    } // 删除数组中第一个元素
+
+  }, {
+    key: "shift",
+    value: function shift() {
+      return this.remove(0);
+    } // 删除数组中最后一个元素
+
+  }, {
+    key: "pop",
+    value: function pop() {
+      return this.remove(this.size - 1);
+    }
+    /**
+     * @desc 根据元素删除
+     * @returns 返回被删除的元素
+     * @param {*} val
+     * @memberof NewArray
+     */
+
+  }, {
+    key: "removeElement",
+    value: function removeElement(val) {
+      var index = this.find(val);
+
+      if (index !== -1) {
+        this.remove(index);
+      }
+    }
+  }, {
+    key: "removeAllElement",
+    value: function removeAllElement(val) {
+      // const indexArr = this.findAll(val);
+      var index = this.find(val);
+
+      while (index !== -1) {
+        this.remove(index); // 循环找下一个符合条件的元素
+
+        index = this.find(val);
+      }
+    }
+    /**
+     * @desc 获取数组信息
+     *
+     * @returns 返回数组信息
+     * @memberof NewArray
+     */
 
   }, {
     key: "toString",
     value: function toString() {
-      var arrInfo = "Array: size-->".concat(this.getSize(), ", capacity-->").concat(this.getCapacity(), " \n<br />");
+      var arrInfo = "Array: size-->".concat(this.getSize(), ", capacity-->").concat(this.getCapacity(), " \n");
       arrInfo += "data = [";
 
       for (var i = 0; i < this.size - 1; i++) {
@@ -271,15 +458,7 @@ function () {
   }]);
 
   return NewArray;
-}(); // const capacity = 8;
-// const arr = new NewArray(capacity);
-// arr.add(3);
-// arr.add(4);
-// arr.add(5);
-// arr.insert(2, 'sadf');
-// console.log(arr.size);
-// console.log(arr.toString());
-
+}();
 
 exports.default = NewArray;
 },{"./utils/ErrorConstants":"Array-#1/utils/ErrorConstants.js"}],"Main.js":[function(require,module,exports) {
@@ -301,21 +480,24 @@ function () {
   function Main() {
     _classCallCheck(this, Main);
 
-    var arr = new _NewArray.default(20);
+    console.info('----init Array----');
+    var arr = new _NewArray.default(10);
 
-    for (var i = 0; i <= 10; i++) {
+    for (var i = 0; i < 10; i++) {
       arr.add(i);
     }
 
-    console.info('----init----\n', arr.toString());
+    console.info('----create Array----\n', arr.toString());
     arr.insert(5, 99999);
     console.info('----insert----\n', arr.toString());
     arr.unshift(-1);
     console.info('----unshift----\n', arr.toString());
     arr.push(88888);
     console.info('----push----\n', arr.toString());
+    arr.remove(9);
+    console.info('----remove----\n', arr.toString());
     arr.set(9, 8888);
-    console.log('----get----\n', arr.get(9));
+    console.info('----get----\n', arr.get(9));
     this.showContent(arr.get(9));
   }
 
@@ -332,7 +514,7 @@ function () {
 window.onload = function () {
   new Main();
 };
-},{"./Array-#1/NewArray":"Array-#1/NewArray.js"}],"C:/Users/junying/AppData/Roaming/nvm/v10.13.0/node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
+},{"./Array-#1/NewArray":"Array-#1/NewArray.js"}],"C:/Users/白泽/AppData/Roaming/npm/node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
 var OldModule = module.bundle.Module;
@@ -360,7 +542,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "13907" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "58303" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
@@ -535,5 +717,5 @@ function hmrAcceptRun(bundle, id) {
     return true;
   }
 }
-},{}]},{},["C:/Users/junying/AppData/Roaming/nvm/v10.13.0/node_modules/parcel-bundler/src/builtins/hmr-runtime.js","Main.js"], null)
+},{}]},{},["C:/Users/白泽/AppData/Roaming/npm/node_modules/parcel-bundler/src/builtins/hmr-runtime.js","Main.js"], null)
 //# sourceMappingURL=/Main.edc4ea10.js.map

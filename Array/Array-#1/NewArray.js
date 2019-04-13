@@ -1,4 +1,4 @@
-import ARRAY_ERROR from './utils/ErrorConstants';
+import { ARRAY_ERROR } from './utils/ErrorConstants';
 /**
  * @author Yuan
  * @description 复写数组
@@ -16,13 +16,39 @@ export default class NewArray {
     getSize() {
         return this.size;
     }
-    // 获取数组容量
+    
+    /**
+     *
+     * @returns 数组大小 --> 数组的容量（非实际的大小）
+     * @memberof NewArray
+     */
     getCapacity() {
         return this.arr.length;
     }
-    // 数组判空
+    
+    /**
+     * @desc 数组判空
+     *
+     * @returns {Boolean}
+     * @memberof NewArray
+     */
     isEmpty() {
         return this.size === 0;
+    }
+    
+    /**
+     * @desc 数组扩容，仅容量{capacity}；与数组的实际大小无关
+     *
+     * @param {*} capacity
+     * @memberof NewArray
+     */
+    resize(capacity) {
+        let newArray = new Array(capacity);
+        for (let i = 0; i < this.size; i++) {
+            // 将旧的数组放入新的数组中
+            newArray[i] = this.arr[i];
+        }
+        this.arr = newArray;
     }
     /**
      * @desc 插入元素
@@ -34,7 +60,8 @@ export default class NewArray {
     insert(index, val) {
         // 判满
         if (this.size === this.getCapacity()) {
-            throw new Error(ARRAY_ERROR.ARRAY_CAPACOTY_ERROR);
+            // throw new Error(ARRAY_ERROR.ARRAY_CAPACITY_ERROR);
+            this.resize(this.size * 2);
         }
         // index是否符合要求
         if (index < 0 || index > this.size) {
@@ -58,9 +85,10 @@ export default class NewArray {
     }
     // 添加元素
     add(val) {
-         // 判满
-         if (this.size === this.getCapacity()) {
-            throw new Error(ARRAY_ERROR.ARRAY_CAPACOTY_ERROR);
+        // 判满 && 扩容
+        if (this.size === this.getCapacity()) {
+            this.resize(this.size * 2);
+            // throw new Error(ARRAY_ERROR.ARRAY_CAPACITY_ERROR);
         }
         this.arr[this.size] = val;
         this.size++;
@@ -86,7 +114,7 @@ export default class NewArray {
      * @memberof NewArray
      */
     set(index, val) {
-        if (index < 0 || index > this.size) {
+        if (index < 0 || index >= this.size) {
             throw new Error(ARRAY_ERROR.SET_ERROR);
         }
         this.arr[index] = val;
@@ -145,16 +173,25 @@ export default class NewArray {
      * @memberof NewArray
      */
     remove(index) {
-        if (index < 0 || index > this.size) {
+        console.log('rmove', index, this.size);
+        if (index < 0 || index >= this.size) {
             throw new Error(ARRAY_ERROR.DELETE_INDEX);
         }
         const element = this.arr[index];
-        for (let i = this.size - 1; i >= index; i--) {
+        // index后面的元素覆盖前面的元素
+        for (let i = index; i < this.size - 1; i++) {
             this.arr[i] = this.arr[i + 1];
         }
-        // 最后一位置空
-        this.arr[this.size - 1] = undefined;
         this.size --;
+        // 最后一位置空
+        this.arr[this.size] = null;
+        // 缩容
+        if (
+            Math.floor(this.getCapacity() / 4) === this.size &&
+            Math.floor(this.getCapacity() / 2 !== 0)
+        ) {
+            this.resize(Math.floor(this.getCapacity() / 2));
+        }
         return element;
     }
     // 删除数组中第一个元素
