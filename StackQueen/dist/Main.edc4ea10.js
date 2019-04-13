@@ -117,22 +117,504 @@ parcelRequire = (function (modules, cache, entry, globalName) {
   }
 
   return newRequire;
-})({"Main.js":[function(require,module,exports) {
+})({"../Array/Array-#1/utils/ErrorConstants.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.ARRAY_ERROR = void 0;
+var ARRAY_ERROR = {
+  'ARRAY_CAPACITY_ERROR': 'ADD_ERROR--Array is full',
+  'INSERT_INDEX_ERROR': 'INSERT_INDEX_ERROR--Array out of bounds',
+  'GET_ERROR': 'GET_ERROR--Array out of bounds',
+  'SET_ERROR': 'SET_ERROR--Array out of bounds'
+};
+exports.ARRAY_ERROR = ARRAY_ERROR;
+},{}],"../Array/Array-#1/NewArray.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _ErrorConstants = require("./utils/ErrorConstants");
+
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-/**
- * 测试
- */
-var Main = function Main() {
-  _classCallCheck(this, Main);
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
 
-  console.info('----init Stack && Queen----');
-};
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+/**
+ * @author Yuan
+ * @description 复写数组
+ * @class NewArray
+ */
+var NewArray =
+/*#__PURE__*/
+function () {
+  // 构造默认的数组大小
+  function NewArray() {
+    var capacity = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 10;
+
+    _classCallCheck(this, NewArray);
+
+    // this.arr = Array.apply(null, Array(capacity)).map(_ => null);
+    this.arr = new Array(capacity);
+    this.size = 0;
+  } // 获取当前数组大小
+
+
+  _createClass(NewArray, [{
+    key: "getSize",
+    value: function getSize() {
+      return this.size;
+    }
+    /**
+     *
+     * @returns 数组大小 --> 数组的容量（非实际的大小）
+     * @memberof NewArray
+     */
+
+  }, {
+    key: "getCapacity",
+    value: function getCapacity() {
+      return this.arr.length;
+    }
+    /**
+     * @desc 数组判空
+     *
+     * @returns {Boolean}
+     * @memberof NewArray
+     */
+
+  }, {
+    key: "isEmpty",
+    value: function isEmpty() {
+      return this.size === 0;
+    }
+    /**
+     * @desc 数组扩容，仅容量{capacity}；与数组的实际大小无关
+     *
+     * @param {*} capacity
+     * @memberof NewArray
+     */
+
+  }, {
+    key: "resize",
+    value: function resize(capacity) {
+      var newArray = new Array(capacity);
+
+      for (var i = 0; i < this.size; i++) {
+        // 将旧的数组放入新的数组中
+        newArray[i] = this.arr[i];
+      }
+
+      this.arr = newArray;
+    }
+    /**
+     * @desc 插入元素
+     *
+     * @param {*} index 需要插入的索引
+     * @param {*} val 需要插入的元素
+     * @memberof NewArray
+     */
+
+  }, {
+    key: "insert",
+    value: function insert(index, val) {
+      // 判满
+      if (this.size === this.getCapacity()) {
+        // throw new Error(ARRAY_ERROR.ARRAY_CAPACITY_ERROR);
+        this.resize(this.size * 2);
+      } // index是否符合要求
+
+
+      if (index < 0 || index > this.size) {
+        throw new Error(_ErrorConstants.ARRAY_ERROR.INSERT_INDEX_ERROR);
+      }
+
+      for (var i = this.size - 1; i >= index; i--) {
+        this.arr[i + 1] = this.arr[i];
+      }
+
+      this.arr[index] = val;
+      this.size++;
+    } // 前方插入
+
+  }, {
+    key: "unshift",
+    value: function unshift(val) {
+      this.insert(0, val);
+    } // 后方插入
+
+  }, {
+    key: "push",
+    value: function push(val) {
+      this.insert(this.size, val);
+    } // 添加元素
+
+  }, {
+    key: "add",
+    value: function add(val) {
+      // 判满 && 扩容
+      if (this.size === this.getCapacity()) {
+        this.resize(this.size * 2); // throw new Error(ARRAY_ERROR.ARRAY_CAPACITY_ERROR);
+      }
+
+      this.arr[this.size] = val;
+      this.size++;
+    }
+    /**
+     * @desc 获取指定位置元素
+     *
+     * @param {*} index
+     * @returns 返回该索引对应的元素
+     * @memberof NewArray
+     */
+
+  }, {
+    key: "get",
+    value: function get(index) {
+      if (index < 0 || index > this.size) {
+        throw new Error(_ErrorConstants.ARRAY_ERROR.GET_ERROR);
+      }
+
+      return this.arr[index];
+    }
+    /**
+     * @desc 获取数组中第一个元素
+     *
+     * @returns 数组中第一个元素
+     * @memberof NewArray
+     */
+
+  }, {
+    key: "getFirst",
+    value: function getFirst() {
+      return this.arr[0];
+    }
+    /**
+     * @desc 获取数组中最后一个元素
+     *
+     * @returns 数组中最后一个元素
+     * @memberof NewArray
+     */
+
+  }, {
+    key: "getLast",
+    value: function getLast() {
+      return this.arr[this.size - 1];
+    }
+    /**
+     * @desc 重置某个索引的元素
+     *
+     * @param {*} index
+     * @param {*} val
+     * @memberof NewArray
+     */
+
+  }, {
+    key: "set",
+    value: function set(index, val) {
+      if (index < 0 || index >= this.size) {
+        throw new Error(_ErrorConstants.ARRAY_ERROR.SET_ERROR);
+      }
+
+      this.arr[index] = val;
+    }
+    /**
+     *
+     * @desc 包含元素
+     * @param {*} val 传入元素
+     * @returns 如果arr中包含该元素，则返回true
+     * @memberof NewArray
+     */
+
+  }, {
+    key: "include",
+    value: function include(val) {
+      for (var i = 0; i < this.size; i++) {
+        if (val === this.arr[i]) {
+          return true;
+        }
+      }
+
+      return false;
+    }
+    /**
+     *
+     * @desc 查找元素
+     * @param {*} val 传入元素
+     * @returns 如果包含该元素，则返回元素的索引，否则返回-1(仅返回第一个匹配的位置)
+     * @memberof NewArray
+     */
+
+  }, {
+    key: "find",
+    value: function find(val) {
+      for (var i = 0; i < this.size; i++) {
+        if (val === this.arr[i]) {
+          return i;
+        }
+      }
+
+      return -1;
+    }
+    /**
+     * @desc 批量查找数组中的相同元素
+     *
+     * @param {*} val
+     * @returns 元素在数组中的位置所组成的数组
+     * @memberof NewArray
+     */
+
+  }, {
+    key: "findAll",
+    value: function findAll(val) {
+      var newArray = new NewArray(this.size);
+
+      for (var i = 0; i < this.size; i++) {
+        if (this.arr[i] === val) {
+          newArray.push(i);
+        }
+      }
+
+      return newArray;
+    }
+    /**
+     * @desc 删除索引元素
+     * @todo 被删除元素会以undefined填充
+     * @param {*} index 传入需要删除的索引
+     * @returns 返回被删除的元素
+     * @memberof NewArray
+     */
+
+  }, {
+    key: "remove",
+    value: function remove(index) {
+      console.log('rmove', index, this.size);
+
+      if (index < 0 || index >= this.size) {
+        throw new Error(_ErrorConstants.ARRAY_ERROR.DELETE_INDEX);
+      }
+
+      var element = this.arr[index]; // index后面的元素覆盖前面的元素
+
+      for (var i = index; i < this.size - 1; i++) {
+        this.arr[i] = this.arr[i + 1];
+      }
+
+      this.size--; // 最后一位置空
+
+      this.arr[this.size] = null; // 缩容
+
+      if (Math.floor(this.getCapacity() / 4) === this.size && Math.floor(this.getCapacity() / 2 !== 0)) {
+        this.resize(Math.floor(this.getCapacity() / 2));
+      }
+
+      return element;
+    } // 删除数组中第一个元素
+
+  }, {
+    key: "shift",
+    value: function shift() {
+      return this.remove(0);
+    } // 删除数组中最后一个元素
+
+  }, {
+    key: "pop",
+    value: function pop() {
+      return this.remove(this.size - 1);
+    }
+    /**
+     * @desc 根据元素删除
+     * @returns 返回被删除的元素
+     * @param {*} val
+     * @memberof NewArray
+     */
+
+  }, {
+    key: "removeElement",
+    value: function removeElement(val) {
+      var index = this.find(val);
+
+      if (index !== -1) {
+        this.remove(index);
+      }
+    }
+  }, {
+    key: "removeAllElement",
+    value: function removeAllElement(val) {
+      // const indexArr = this.findAll(val);
+      var index = this.find(val);
+
+      while (index !== -1) {
+        this.remove(index); // 循环找下一个符合条件的元素
+
+        index = this.find(val);
+      }
+    }
+    /**
+     * @desc 获取数组信息
+     *
+     * @returns 返回数组信息
+     * @memberof NewArray
+     */
+
+  }, {
+    key: "toString",
+    value: function toString() {
+      var arrInfo = "Array: size-->".concat(this.getSize(), ", capacity-->").concat(this.getCapacity(), " \n");
+      arrInfo += "data = [";
+
+      for (var i = 0; i < this.size - 1; i++) {
+        arrInfo += "".concat(this.arr[i], ",");
+      }
+
+      "]";
+      arrInfo += "".concat(this.arr[this.size - 1], "]");
+      document.body.innerHTML += "".concat(arrInfo, "<br />");
+      return arrInfo;
+    }
+  }]);
+
+  return NewArray;
+}();
+
+exports.default = NewArray;
+},{"./utils/ErrorConstants":"../Array/Array-#1/utils/ErrorConstants.js"}],"Stack.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _NewArray = _interopRequireDefault(require("../Array/Array-#1/NewArray"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+var NewStack =
+/*#__PURE__*/
+function () {
+  function NewStack() {
+    var capacity = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 10;
+
+    _classCallCheck(this, NewStack);
+
+    this.arr = new _NewArray.default(capacity);
+  }
+
+  _createClass(NewStack, [{
+    key: "isEmpty",
+    value: function isEmpty() {
+      return this.arr.isEmpty();
+    }
+  }, {
+    key: "stackSize",
+    value: function stackSize() {
+      return this.arr.getSize();
+    }
+  }, {
+    key: "stackCapacity",
+    value: function stackCapacity() {
+      return this.arr.getCapacity();
+    }
+  }, {
+    key: "pushStack",
+    value: function pushStack(val) {
+      this.arr.push(val);
+    }
+  }, {
+    key: "popStack",
+    value: function popStack() {
+      return this.arr.pop();
+    }
+  }, {
+    key: "peakStack",
+    value: function peakStack() {
+      return this.arr.getLast();
+    }
+  }, {
+    key: "toString",
+    value: function toString() {
+      var arrInfo = "Stack: size-->".concat(this.stackSize(), ", capacity-->").concat(this.stackCapacity(), " \n");
+      arrInfo += "data = [";
+
+      for (var i = 0; i < this.arr.size - 1; i++) {
+        arrInfo += "".concat(this.arr.arr[i], ",");
+      }
+
+      "]";
+      arrInfo += "".concat(this.arr[this.arr.size - 1], "]");
+      document.body.innerHTML += "".concat(arrInfo, "<br />");
+      return arrInfo;
+    }
+  }]);
+
+  return NewStack;
+}();
+
+exports.default = NewStack;
+},{"../Array/Array-#1/NewArray":"../Array/Array-#1/NewArray.js"}],"Main.js":[function(require,module,exports) {
+"use strict";
+
+var _Stack = _interopRequireDefault(require("./Stack"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+var Main =
+/*#__PURE__*/
+function () {
+  function Main() {
+    _classCallCheck(this, Main);
+
+    console.info('----init Stack && Queen----');
+    var ms = new _Stack.default(10);
+
+    for (var i = 1; i <= 10; i++) {
+      ms.pushStack(i);
+      console.log(ms.toString());
+    }
+
+    console.log(ms.peakStack());
+    this.showContent(ms.peakStack());
+
+    while (!ms.isEmpty()) {
+      console.log(ms.toString());
+      ms.popStack();
+    }
+  }
+
+  _createClass(Main, [{
+    key: "showContent",
+    value: function showContent(content) {
+      document.body.innerHTML += "".concat(content, "\n\n");
+    }
+  }]);
+
+  return Main;
+}();
 
 window.onload = function () {
   new Main();
 };
-},{}],"C:/Users/白泽/AppData/Roaming/npm/node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
+},{"./Stack":"Stack.js"}],"C:/Users/白泽/AppData/Roaming/npm/node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
 var OldModule = module.bundle.Module;
@@ -160,7 +642,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "55609" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "59324" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

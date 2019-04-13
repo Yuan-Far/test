@@ -285,6 +285,30 @@ function () {
       return this.arr[index];
     }
     /**
+     * @desc 获取数组中第一个元素
+     *
+     * @returns 数组中第一个元素
+     * @memberof NewArray
+     */
+
+  }, {
+    key: "getFirst",
+    value: function getFirst() {
+      return this.arr[0];
+    }
+    /**
+     * @desc 获取数组中最后一个元素
+     *
+     * @returns 数组中最后一个元素
+     * @memberof NewArray
+     */
+
+  }, {
+    key: "getLast",
+    value: function getLast() {
+      return this.arr[this.size - 1];
+    }
+    /**
      * @desc 重置某个索引的元素
      *
      * @param {*} index
