@@ -35,12 +35,15 @@ export default class NewStack {
 
     toString() {
         let arrInfo = `Stack: size-->${this.stackSize()}, capacity-->${this.stackCapacity()} \n`;
-        arrInfo += `data = [`
-            for (let i = 0; i < this.arr.size - 1; i++) {
-                arrInfo += `${this.arr.arr[i]},`;
-            }
-        `]`;
-        arrInfo += `${this.arr[this.arr.size - 1]}]`;
+        arrInfo += `data = first  [`;
+        for (var i = 0; i < this.arr.size - 1; i++) {
+           arrInfo += `${this.arr.arr[i]}, `;
+        }
+        if (!this.isEmpty()) {
+           arrInfo += `${this.arr.arr[this.arr.size - 1]}`;
+        }
+        arrInfo += `]  last`;
+
         document.body.innerHTML += `${arrInfo}<br />`
         return arrInfo;
     }

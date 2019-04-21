@@ -2,26 +2,44 @@
  * 测试
  */
 import NewStack from './Stack';
+import IQueen from './Queen';
 class Main {
     constructor() {
-        console.info('----init Stack && Queen----');
-        let ms = new NewStack(10);
+        // this.showHeader('Stack');
+        // let ms = new NewStack(10);
+        // for (let i = 1; i <= 10; i++) {
+        //     ms.pushStack(i);
+        //     console.log(ms.toString());
+        // }
+
+        // console.log(ms.peakStack());
+        // this.showContent(ms.peakStack());
+
+        // while (!ms.isEmpty()) {
+        //     console.log(ms.toString());
+        //     ms.popStack();
+        // }
+        this.showHeader('Queen');
+        let iQueen = new IQueen();
         for (let i = 1; i <= 10; i++) {
-            ms.pushStack(i);
-            console.log(ms.toString());
+            iQueen.enqueen(i);
+            console.info(iQueen.toString());
         }
-
-        console.log(ms.peakStack());
-        this.showContent(ms.peakStack());
-
-        while (!ms.isEmpty()) {
-            console.log(ms.toString());
-            ms.popStack();
+        console.info(iQueen.getFront());
+        this.showContent(iQueen.getFront());
+        while (!iQueen.isEmpty()) {
+            console.info(iQueen.dequeen());
+            iQueen.toString();
         }
     }
 
     showContent(content) {
         document.body.innerHTML += `${content}\n\n`;
+    }
+
+    showHeader(title) {
+        console.info(`--------------------${title}----------------------`);
+        document.body.innerHTML += `${title} <br />`
     }
 }
 
