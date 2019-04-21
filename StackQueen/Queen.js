@@ -11,7 +11,7 @@ export default class IQueen {
         this.arr.push(val);
     }
     /**
-     * @desc 队列出队
+     * @desc 队列出队 O{n}
      * @return 返回出队元素
      */
     dequeen() {
