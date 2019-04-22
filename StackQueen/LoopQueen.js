@@ -12,11 +12,12 @@ export default class LoopQueen {
      * @params {number} 新的数组容量
      */
     resize(capacity) {
-        const newArr = new Array(capacity);
+        let newArr = new Array(capacity);
+        let index = 0;
         for (let i = 0; i < this.size; i++) {
             // 防止索引越界出现假溢出
             // 循环队列， 索引控制判断条件
-            const index = (this.front + i) % this.getQueenCapacity();
+            index = (this.front + i) % this.getQueenCapacity();
             newArr[i] = this.arr[index];
         }
 
@@ -29,7 +30,7 @@ export default class LoopQueen {
      * @param {*} val 入队元素
      */
     enqueen(val) {
-        // 队列判满
+        // 队列判满扩容
         if ((this.tail + 1) % this.getQueenCapacity() === this.front) {
             this.resize(Math.floor(this.getQueenCapacity() * 2));
         }
@@ -46,11 +47,13 @@ export default class LoopQueen {
         if (this.isEmpty()) {
             throw new Error('This queen is empty');
         }
-        const val = this.arr[this.front];
+
+        let val = this.arr[this.front];
         this.arr[this.front] = null;
         this.front = (this.front + 1) % this.getQueenCapacity();
-        this.size --;
-
+        this.size--;
+        
+        // 出队缩容
         if (this.size === Math.floor(this.getQueenCapacity() / 4)) {
             this.resize(Math.floor(this.getQueenCapacity() / 2));
         }
@@ -61,7 +64,7 @@ export default class LoopQueen {
      * @return {boolean}
      */
     isEmpty() {
-        return this.front === this.tail;
+        return this.size === 0;
     }
     getQueenSize() {
         return this.size;
@@ -78,14 +81,10 @@ export default class LoopQueen {
     toString() {
         let arrInfo = `LoopQueen: size-->${this.getQueenSize()} \n, capacity-->${this.getQueenCapacity()} \n`;
         arrInfo += `data = front  [`;
-        for (let i = 0; i < this.size - 1; i++) {
-            arrInfo += `${this.arr[i]}, `;
-        }
-        if (!this.isEmpty()) {
-            arrInfo += `${this.arr[this.size - 1]}`;
-        }
+        arrInfo += this.arr.filter(item => item !== null).map((item) => {
+            return `${item}`
+        })
         arrInfo += `]  tail`;
-
         document.body.innerHTML += `${arrInfo}<br />`
         return arrInfo;
     }
