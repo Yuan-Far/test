@@ -1,0 +1,20 @@
+{
+  "config": {
+    "archivesPageSize": 20,
+    "archivesPath": "archives",
+    "dateFormat": "YYYY-MM-DD",
+    "feedCount": 10,
+    "feedFullText": false,
+    "footerInfo": "Powered by <a href=\"https://github.com/getgridea/gridea\" target=\"_blank\">Gridea</a>",
+    "postPageSize": 10,
+    "postPath": "post",
+    "postUrlFormat": "SHORT_ID",
+    "showFeatureImage": true,
+    "siteDescription": "温故而知新",
+    "siteName": "Abyss",
+    "tagPath": "tag",
+    "tagUrlFormat": "SHORT_ID",
+    "themeName": "notes"
+  },
+  "customConfig": {}
+}

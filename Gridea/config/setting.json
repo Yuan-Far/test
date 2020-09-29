@@ -1,0 +1,26 @@
+{
+  "config": {
+    "branch": "master",
+    "domain": "https://qingwu-aby.github.io/",
+    "email": "",
+    "platform": "github",
+    "repository": "qingwu-aby.github.io",
+    "token": "f6afc0f40d1344e2ddb68a8a68b25f247e14551c",
+    "username": "qingwu-aby"
+  },
+  "comment": {
+    "commentPlatform": "gitalk",
+    "disqusSetting": {
+      "api": "",
+      "apikey": "",
+      "shortname": ""
+    },
+    "gitalkSetting": {
+      "clientId": "",
+      "clientSecret": "",
+      "owner": "",
+      "repository": ""
+    },
+    "showComment": false
+  }
+}

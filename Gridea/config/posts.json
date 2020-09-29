@@ -1,0 +1,259 @@
+{
+  "posts": [
+    {
+      "content": "<!-- START-SECTION:setup-toc-->\n# 链表和数组\n\n##  区别：\n> 1. 数组： 可以连续存储，通过数组的索引可以很快的查找数据；连续存储的问题点也在于此，需要在创建的时候一次性的分配所有数据所需要的内存，数组如果需要扩容，则需要重新分配一块更大的空间，将原有数组复制过去，这个复制操作时间复杂度是O(n)，同理，如果在数组中插入数据或者删除数据的时候则需要将插入点（删除点）之后的所有数组索引移动，用于保持当前数组的连续性，因为要进行遍历则时间复杂度为O（n）。\n> 2. 链表：数据的存储结构是不连续，是依赖于指针指向下一个元素的位置，所以链表的扩容问题不存在；只需要知道某元素的前驱节点和后驱节点就可以进行删除和更新操作，时间复杂度为O(1),因为链表的存储结构不连续，导致了链表不能够像数组一样拥有随机访问的特征，所以也就无法通过索引找到对应的元素；同时与数组相比，链表需要额外的空间去存储一个元素的前后节点。\n\n##  数据结构的基本操作\n\n**增删改查**\n> 数据结构是为了更高效的增删改查而存在的\n> 访问和遍历的方式一共两种：线性和非线性\n> 1. 线性：以`for/while`迭代为主\n``` javascript\n    // 数组遍历\n    const arr = []\n    for(let i = 0; i< arr.length ; i++) {\n        // 数组迭代\n    }\n ```\n> 2. 非线性：递归\n",
+      "data": {
+        "title": "基本数据结构",
+        "date": "2020-09-26 15:37:14",
+        "tags": [],
+        "published": false,
+        "hideInList": false,
+        "feature": null,
+        "isTop": false
+      },
+      "isEmpty": false,
+      "excerpt": "",
+      "abstract": "",
+      "fileName": "8M8V_muR3"
+    },
+    {
+      "content": "\n<!-- 技术揭秘 -->\n\n**React的理念**\n\n\n",
+      "data": {
+        "title": "React---1",
+        "date": "2020-09-23 20:16:23",
+        "tags": [],
+        "published": false,
+        "hideInList": false,
+        "feature": null,
+        "isTop": false
+      },
+      "isEmpty": false,
+      "excerpt": "",
+      "abstract": "",
+      "fileName": "E0UjUKnBP"
+    },
+    {
+      "content": "\n[toc]\n\n<!-- 迫于无奈特意开了这个系列，遵照网上的一些资源加上自己的理解去深入的学习一下React -->\n\n\n----\n\n# 准备工作\n\n1. 我们需要知道什么是虚拟DOM\n2. 如何生成虚拟DOM\n\n## 什么是虚拟DOM\n> 我们都知道浏览器渲染一个页面是首先生成一棵DOM树，然后再渲染`css`,`js`；据此可知道，我们的虚拟DOM树实际上就是一个个具有固定格式的`js`对象\n> ``` javascript\n>  const treeObj = {\n>   tag: 'div',\n>   attrs: {\n>       'className': 'test-class_title'\n>   },\n>   children: [\n>       {\n>           key: 'p',\n>           attrs: {\n>               className: 'test-class-children_title'\n>           }\n>           children: [\n>               ...\n>           ]\n>       }\n>   ]\n> }\n> ```\n> 如上所述，通过这个一个简单的对象就能渲染出一个真实的DOM，其中`p`标签实际上是`div`的一个子元素，真实节点描述如下：\n> ``` javascript\n> <div className='test-class_title'>\n>   <p className='test-class-children_title'></p>\n> </div>\n> ```\n\n## 如何生成一棵`DOM`树\n> 这一切的基准点都是从`Babel`的\n>  1. 首先需要把代码抽象成一棵抽象语法树（`AST`）\n>  2. 然后去解析\n>  3. 生成浏览器可识别的代码（`js`） \n**这里以`React`代码举一个例子:**\n> ``` javascript\n> class App extends React.Component {\n>   render() {\n>       return <div>div</div>\n>   }\n> }\n> ```\n> 这段代码最终会被编译成：[Babel](https://www.babeljs.cn/repl#?browsers=&build=&builtIns=false&spec=false&loose=false&code_lz=MYGwhgzhAECCAO9oFMAeAXZA7AJjASsmMOgHQDCA9gLbyVbboDeAUAJABO2OyHAFAEpW0EdC7oArhyzQAPDgCWANwB8ipbID06lS1HQAviyMsgA&debug=false&forceAllTransforms=false&shippedProposals=false&circleciRepo=&evaluate=false&fileSize=false&timeTravel=false&sourceType=module&lineWrap=true&presets=es2015%2Creact&prettier=false&targets=&version=7.5.5&externalPlugins=)\n> ``` javascript\n> ...\n> _createClass(App, [{\n>   key: 'render',\n>   value: function render() {\n>       return React.createElement('div', null, 'div')\n>   }\n> }])\n> ... // 省略\n> ```\n> 从这里我们可以看出来`return <div>div</div>`经过解析以及`babel`的转换之后变成了`return React.createElement('div', null, 'div')`\n> \n### 如何转换\n> 由上文可知，代码最终被转换为`React.createElement()`这种方式，可以在全局挂载一个`React`对象，将`createElement`挂载在`React`下面\n> ``` javascript\n> const React = {}\n> React.createElement = function(tag, attrs, ...children) {\n>   return {\n>       tag,\n>       attrs,\n>       children\n>   }\n> }\n> export default React\n> ```\n\n",
+      "data": {
+        "title": "秋天里的React--1",
+        "date": "2020-09-20 16:27:10",
+        "tags": [
+          "React"
+        ],
+        "published": false,
+        "hideInList": false,
+        "feature": null,
+        "isTop": false
+      },
+      "isEmpty": false,
+      "excerpt": "",
+      "abstract": "",
+      "fileName": "0rtsFvZCm"
+    },
+    {
+      "content": "\n<!-- more -->\n1. Js基础\n    1. `Promise`\n    2. `setTimeout`和`setInterval`\n    3. `eventloop`\n    4. `prototype`\n    5. `proxy`\n    6. ES静态分析\n    7. 垃圾回收\n    8. `call，apply，bind`\n    9. 闭包与内存泄漏\n    10. 浏览器GC\n    11. 节流与防抖\n    12. `requestIdleCallback`\n    13. 排序`sort`方法的应用，以及是否对字符串排序的原理\n    14. 深浅拷贝\n    15. 数组去重\n2. React 源码分析\n    1. 虚拟dom\n    2. `hooks`\n    3. `fiber` 和 `requestIdleCallback`\n3. redux\n    1. `compose`实现逻辑\n    2. `saga`\n    3. `normlize`\n    4. 不可变数据类型immutable\n4. `NodeJS`\n    1. 事件系统（eventbus）\n    2. 缓冲队列\n5. 数据结构\n    1. 基础数据结构（数组与链表）\n    2. 树，图\n6. 算法\n    1. 基础排序\n    2. 动态规划\n    3. 树相关算法\n7. 前端性能调优\n    1. `FCP/FMP/FR`\n8. 前端安全问题\n    1. `csrf` 跨站脚本攻击\n9.  前端错误监控与上报\n    1.  sentry\n    2.  kibana\n    3.  异常的捕获及其区别\n10. 计算机网络\n    1. TCP/IP\n    2. HTTP\n    3. HTTPS\n11. 浏览器相关\n    1.  渲染机制\n    2.  设计模式\n12. 操作系统相关\n    1.  进程和线程\n13. `nginx`\n    1.  负载均衡\n    2.  反向代理\n14. 前端项目打包与脚手架以及工具类\n    1.  `webpack`\n    2.  `babel`\n\n** 数据结构与算法**\n**JS基础**\n**React+Redux**\n",
+      "data": {
+        "title": "推进节奏",
+        "date": "2020-08-09 14:44:25",
+        "tags": [
+          "JS基础",
+          "算法和数据结构",
+          "todo"
+        ],
+        "published": true,
+        "hideInList": false,
+        "feature": null,
+        "isTop": false
+      },
+      "isEmpty": false,
+      "excerpt": "",
+      "abstract": "",
+      "fileName": "tui-jin-jie-zou"
+    },
+    {
+      "content": "> 回溯算法实际上是一个决策树的遍历过程\n\n    * 路径： 即已经做出的选择\n    * 选择列表：当前可以做出的决策\n    * 结束条件： 到达树底的时候，无法作出选择的条件\n\n```\nresult = []\nconst backtrack(路径, 选择列表) {\n    if 满足结束条件:\n        result.add(路径)\n        return\n\n    for 选择 in 选择列表:\n        做选择\n        backtrack(路径, 选择列表)\n        撤销选择\n}\n```",
+      "data": {
+        "title": "回溯算法1--全排列",
+        "date": "2020-06-18 18:41:07",
+        "tags": [],
+        "published": true,
+        "hideInList": false,
+        "feature": null,
+        "isTop": false
+      },
+      "isEmpty": false,
+      "excerpt": "",
+      "abstract": "",
+      "fileName": "hui-su-suan-fa-1-quan-pai-lie"
+    },
+    {
+      "content": "> 决策过程\n```\n// base case\ndp[0][0]... = base\n    // 状态转移过程\n    for(状态1 in 状态1所有值) {\n        for (状态2 in 状态2所有值) {\n            ...\n            dp[状态1][状态2]... = 最值(选择1， 选择2， ...)\n        }\n    }\n```\n\n1. 自顶向下分析\n   ``` javascript\n   /**\n     * @description 自顶向下分析\n     * @param {*} coins \n     * @param {*} amount \n     */\n\n    const coinChange = (coins, amount) => {\n    const memo = []\n    function dp(n) {\n        if (memo[n]) return memo[n]\n        if (n === 0) return 0\n        if (n < 0) return -1\n        let res = amount + 1\n        for (let coin in coins) {\n            // 获得子问题\n        const sub = dp(n - coins[coin])\n        if (sub === -1) continue\n        res = min(res, 1 + sub)\n        }\n        memo[n] = res\n        return res !== amount + 1 ? memo[n] : -1\n    }\n    return dp(amount)\n    }\n\n    console.log('----', coinChange(arr, 11))\n\n   ```\n2.  自底向上分析\n   ``` javascript\n   var coinChange = function(coins, amount) {\n    const min = (a, b) => a > b ? b : a\n    const dp = new Array(amount + 1).fill(amount + 1)\n    // define init value\n    dp[0] = 0\n    // 状态转移\n    for(let i = 0; i< dp.length; i++) {\n        for(let coin in coins) {\n            if (i - coins[coin]) continue\n            dp[i] = min(dp[i], 1 + dp[i - coins[coin]])\n        }\n    }\n    return (dp[amount] === amount + 1) ? -1 : dp[amount]\n    };\n   ```",
+      "data": {
+        "title": "动态规划2---凑零钱",
+        "date": "2020-06-18 18:18:18",
+        "tags": [],
+        "published": true,
+        "hideInList": false,
+        "feature": null,
+        "isTop": false
+      },
+      "isEmpty": false,
+      "excerpt": "",
+      "abstract": "",
+      "fileName": "dong-tai-gui-hua-2-cou-ling-qian"
+    },
+    {
+      "content": "> 核心问题是枚举\n> 寻找最优子结构\n> 获得状态转移方程\n\n1. 直接使用递归操作\n   ``` javascript\n   const fib = n => {\n        if (n === 1 || n === 2) return 1\n        return fib(n - 1) + fib(n - 2)\n    }\n\n    console.log('---FIB___1---', fib(8))\n   ```\n2. 增加一个备忘录记录已经计算的值，避免重复计算（自顶向下）\n   ``` javascript\n   /**\n     * @desc 给斐波那契数列增加一个中间数组保存已经计算过的元素，\n     * @param {中间数组} memo \n     * @param {数列长度} n \n     */\n    const enhancer = (memo, n) => {\n        if (n === 1 || n === 2) return 1\n        if (memo[n]) return memo[n]\n        return enhancer(memo, n - 1) + enhancer(memo, n - 2)\n    }\n\n    const fib2 = n => {\n        const memo = []\n        return enhancer(memo, n)\n    }\n\n    console.log('----FIB___2----', fib2(8))\n   ```\n3. 使用自底向上的计算方式，将问题分解，获得最优子结构\n   ``` javascript\n   /**\n     * @desc 使用DP table\n     * @param {*} n \n     */\n    const fib3 = n => {\n    const dp = []\n    dp[0] = 0 \n    dp[1] = dp[2] = 1\n    for (let i = 3; i <= n; i++) {\n        dp[i] = dp[i - 1] + dp[i - 2]\n    }\n    return dp[n]\n    }\n\n    console.log('----FIB___3----', fib3(8))\n   ```\n4. 优化3，将dptable大小压缩\n   ``` javascript\n   /**\n     * @desc 因为数列的值只和之前的两个状态有关系，在这里保存之前的状态能够节省空间\n     * @description 【状态压缩】 将dp-table的大小压缩\n     * @param {*} n \n     */\n    const fib4 = n => {\n    if (n === 1 || n === 2) return 1\n    let prev = 1\n    let curr = 1\n    for (let i = 3; i <= n; i++) {\n        const sum = prev + curr\n        prev = curr\n        curr = sum\n    }\n    return curr\n    }\n\n    console.log('----FIB___4----', fib4(8))\n   ```",
+      "data": {
+        "title": "动态规划---1（斐波那契数列说起）·",
+        "date": "2020-06-17 17:47:18",
+        "tags": [],
+        "published": true,
+        "hideInList": false,
+        "feature": null,
+        "isTop": false
+      },
+      "isEmpty": false,
+      "excerpt": "",
+      "abstract": "",
+      "fileName": "dong-tai-gui-hua-1fei-bo-na-qi-shu-lie-shuo-qi"
+    },
+    {
+      "content": "\n### 关于非受控组件在异步操作中变更defaultValue信息的解决方案\n>> 可以增加一个key值\n\n\n### 正则:\n>> 手机号：`/^1(?:3\\d|4[4-9]|5[0-35-9]|6[67]|7[013-8]|8\\d|9\\d)\\d{8}$/`\n\n> fontSize会导致div所占实际区块变大（在inspector中无法找到，但是实际中是会覆盖掉其他div）\n\n\n\n### 代码执行顺序：\n> `macrotasks: setTimeout, setInterval, setImmediate, I/O, UI rendering`\n\n> `microtasks: process.nextTick, Promises, Object.observe(废弃), MutationObserver`\n\n\n> 同步代码——>microTask——>macroTask\n>> eg: `https://jakearchibald.com/2015/tasks-microtasks-queues-and-schedules/`\n\n> iOS问题   \n>> `text-decoration-line: line-through;` -> `text-decoration: line-through;`\n\n\n### 列表中的两种组件，排版出错\n>> `vertical-align: top;`\n\n### React-Router\n\n> 嵌套路由中次级路由无法生效， 确认一级路由与次级路由的衔接是否使用了`exact={true}`\n\n\n### 页面中的请求数据处理\n\n> 1. 判断是否需要这个请求的条件，如果某个条件不满足，则不会去请求，如果满足发起请求\n> 2. 返回数据校验，防止数据出现`undefined`和`{}`, 的时候页面出现`TypeError`\n> 3. 组件处理: 不满足条件的时候禁止渲染该组件\n\n**解决方法**\n\n> 在最外层使用统一的数据处理方法，确保进入组件中的数据是自己想要的，同时在最外层的处理方法中对数据的可用性进行兜底判别，如果是`null` || `undefined`，进行兜底处理，返回一个空对象`{}`,否则对数据进行处理\n\n### `function`参数的边界值处理\n\n> 对于函数传递的参数，在函数内部一定要进行处理，边界值`0`, `null`, `undefined`等，防止极端情况下出错\n\n### iOS下fixed失效问题\n\n> iOS上面使用`fixed`布局在唤起键盘的时候`fixed`布局的组件会失效。\n> 解决方法： 对外层`div`设置\n```\nposition: absolute;\nwidth: 100%;\nleft: 0;\nright: 0;\ntop: 0;\nbottom: 0;\nfont-size: 0;\noverflow-y: scroll;\n-webkit-overflow-scrolling: touch;/* 解决ios滑动不流畅问题 */\n```\n> 让元素在内层`div`中滚动(不采用这种方式，页面是在`body`中滚动)\n\n### canvas 失真\n\n> 原因： 多发生在手机端，因为像素密度不一致导致失真\n\n```\nconst getPixelRatio = function(context) {\n    const backingStore = context.backingStorePixelRatio ||\n        context.webkitBackingStorePixelRatio ||\n        context.mozBackingStorePixelRatio ||\n        context.msBackingStorePixelRatio ||\n        context.oBackingStorePixelRatio || 1;\n\n    return (window.devicePixelRatio || 1) / backingStore;\n};\n```\n\n### ReactDOM -> findDOMNode\n\n> `findDOMNode(this).ownerDocument` 获取当前节点的HTML根节点\n\n\n###　js数组（new Array）是稀疏数组，无法map\n\n> `Array.apply(null, Array(n)).map(() => null)` // 初始化一个长度为N的数组并且赋值为null\n\n**apply** 会将生成的稀疏数组展开并传给上面`Array`构造函数\n\n```\nArray(n) === [,,...,,]; // 只有长度\nArray(null, ... , null)\n```\n\n> 上面的构造等于`new Array(n).fill(null)`\n\n### `React.PureComponent`和`this.forceUpdate()`\n\n> `React.PureComponent` 的 `shouldComponentUpdate()` 只会对对象进行浅对比。如果对象包含复杂的数据结构，它可能会因深层的数据不一致而产生错误的否定判断(表现为对象深层的数据已改变视图却没有更新)。当你期望只拥有简单的`props`和`state`时，才去继承 `PureComponent` ，或者在你知道深层的数据结构已经发生改变时使用 `forceUpate()` 。或者，考虑使用 不可变对象 来促进嵌套数据的快速比较！\n\n\n### `Windows` `git`大小写不敏感\n\n> `git config core.ignorecase false`\n### 关于结构赋值与`null`的问题\n``` javascript\n\nconst obj = {\n    a: null,\n    b: undefined,\n}\n\nconst {\n    a = [], b = {}\n} = obj;\nconsole.log(a, b);\n```\n> `node-sass`安装问题\n\n>> 需要安装`python`和`c++`编译环境\n>> `npm install --global --production windows-build-tools`\n\n### 滚动条\n\n> \n``` css\ndiv::-webkit-scrollbar {\n  /* 这里的宽是指竖向滚动条的宽，高是指横向滚动条的高*/      \n  width: 16px;      \n  height: 16px;      \n  background: pink;    \n}\ndiv::-webkit-scrollbar-thumb {      \n  border-radius: 10px;      \n  background: \n  linear-gradient(red,orange);    \n}\n```\n\n> 使用“&&”运算符的时候，如果两边的操作数有一个不是布尔类型，那么返回值不一定是布尔类型\n  1. 有一个是`null`， 则返回`null`\n  2. 有一个是`undefined`，则返回`undefined`\n  3. 第一个是对象，则返回第二个，为true，则返回第二个，为false，则返回false  \n\n> offsetWidth/offsetHeight\n>> CSS width 属性值 + 左右 padding + 左右 border + 垂直滚动条宽度 = offsetWidth\n>> CSS height 属性值 + 上下 padding + 上下 border + 水平滚动条高度 = offsetHeight\n\n** 这里列出需要关注的重点：**\n\n> * offsetWidth/offsetHeight 是只读属性，手动赋值虽不会报错，但也不会生效。所以，也就不能通过这两个属性动态的修改元素的宽高。\n> * offsetWidth/offsetHeight 返回值总是整数，而不是精确的浮点数，四舍五入取整数。\n若元素 display: none，那么 offsetWidth/offsetHeight 为 0。\n> * offsetHeight 的值不包括伪元素的高度，例如 :before 和 :after。\n若元素内部包含未清除浮动的子元素，那么将不包含这些浮动元素的宽高。",
+      "data": {
+        "title": "一些问题",
+        "date": "2020-05-22 18:13:19",
+        "tags": [
+          "一些问题"
+        ],
+        "published": true,
+        "hideInList": false,
+        "feature": null,
+        "isTop": false
+      },
+      "isEmpty": false,
+      "excerpt": "",
+      "abstract": "",
+      "fileName": "yi-xie-wen-ti"
+    },
+    {
+      "content": "1. helmet express 安全性\n2. express-rate-limit express 速率限制器（限制ip访问）\n3. csurf 防止CSRF跨站脚本攻击\n\n包压缩\n1. http开启gzip\n2. compression 对响应进行压缩",
+      "data": {
+        "title": "npm-nest",
+        "date": "2020-05-14 18:19:22",
+        "tags": [],
+        "published": true,
+        "hideInList": false,
+        "feature": null,
+        "isTop": false
+      },
+      "isEmpty": false,
+      "excerpt": "",
+      "abstract": "",
+      "fileName": "npm-nest"
+    },
+    {
+      "content": "<!--以Android为例-->\n\n# `WebView`\n## 在`Android`中的定义\n* `BPWebBridge`: 定义方法\n    > 暴露给`bridge`的方法\n    > 定义`handler`在子线程调用完成之后，触发`UI`线程的渲染\n* `BPWebUIRouter`: 定义调用模块\n    > 设置前端调用的命令字以及前端调用原生的业务逻辑\n    > 定义参数类型\n\n## 在前端的定义\n* 从前端全局暴露的`WebViewJavascriptBridge`属性入手，这个属性中包含了四个对象：\n  ``` javascript\n  window.WebViewJavascriptBridge = {\n        callHandler: callHandler,\n        hasHandler: hasHandler,// 可删除\n        // ——new api——————————————————————————————————————————\n        registerHandler: registerHandler,\n        hasRegisteredHandler: hasRegisteredHandler\n        // ————————————————————————————————————————————————\n    };\n  ```\n\n  参照客户端代码和前端的一些定义方法\n  ``` java\n  @JavascriptInterface\n    public boolean hasHandler(final String cmd) {\n        // todo\n    }\n\n    @JavascriptInterface\n    public void send(final String cmd, String data, final String callback) {\n        // todo\n    }\n  ```\n  可以看到客户端通过注解（`JavascriptInterface`）将`send`和`hasHandler`方法与前端进行了关联，这个时候前端通过调用`hasHandler`实际上是走到了原生的调用方法，前端的定义是无效的。\n  也就是说通过`window.WebViewJavascriptBridge.xxx`的方式向外部暴露的属性全部都是在前端所定义的。\n* 接下来分析一下看一下`window.bridge`中定义的方法\n``` java \nprivate static final String BRIDGE_RESULT_BACK_TEMPLATE =\n            \"javascript: window.bridge.onReceive(\\'%1$s\\', \\'%2$s\\');\";\n\nprivate static final String BRIDGE_CALL_TEMPLATE =\n            \"javascript: window.bridge.call(\\'%1$s\\', \\'%2$s\\', \\'%3$s\\');\";\n\n```\n可以看到`onRecieve`和`call`方法是通过客户端内部封装的方法注入到`js`里面的，同时定义了传入的参数个数\n\n## `callHandler`调用过程\n\n![](/post-images/1570613811174.png)\n上面的图展示了从前端到客户端的调用过程，\n* 前端通过`callHandler`方法调用了`window.bridge.send`方法<FE>\n* `window.bridge.send`通过触发`BPWebUIRouter.handleCmd`触发命令字的调用<BPWebBridge>\n* `BPWebUIRouter.handleCmd`方法调用示例`showToast(bridge, data, callback);`可以看出来实际上传入的是一个`bridge`,而这个`bridge`就是上文中的`BPWebViewBridge`\n``` java\nprivate static void showToast(BPWebBridge bridge, JSONObject data, String callback) {\n        String msg = data.optString(KEY_MSG, \"\");\n        if (TextUtils.isEmpty(msg)) {\n            return;\n        }\n        BBToastManager.getInstance().show(msg);\n        bridge.sendResultBack(callback, new BPBaseWebResult(RESULT_CODE.RESULT_SUCCESS));\n    }\n```\n* 以`showToast`方法的调用为示例进行分析，可以看到在`BPWebUIRouter`中最终的调用还是到了`BPWebviewBridge`中，最终调用的方法就是`sendResultBack`\n* 在`sendResultBack`中通过`webview.loadUrl`进行了拦截\n``` java\npublic void sendResultBack(final String callback, final BPBaseWebResult result) {\n        Handler webViewHandler = webView.getHandler();\n        if (webViewHandler != null) {\n            webViewHandler.post(() -> {\n                String js =\n                        String.format(BRIDGE_RESULT_BACK_TEMPLATE, callback, result.toDataString());\n                BBAppLogger.i(\"send result back: %1$s\", js);\n                webView.loadUrl(js);\n            });\n        }\n    }\n```\n通过上文可以知道`BRIDGE_RESULT_BACK_TEMPLATE`是一个注入的对象--->`window.bridge.onReceive`,接下来回到`onReceive`方法，看看它做了什么\n* 在`onReceive`中主要通过是否传递`callbackId`，来判断是`js`调用客户端，或者是客户端调用`js`\n``` javascript\nwindow.bridge.onReceive = function (callbackId, result) {\n\t\t\tvar resultObj = {};\n\t\t\ttry {\n\t\t\t\tresultObj = JSON.parse(result);\n\t\t\t} catch (ex) {}\n\n\t\t\t/**\n\t\t\t * 1，如果是客户端的回调，会带上 callbackId\n\t\t\t * 2，如果是客户端的主动调用，callbackId传''空串，resultObj会存在handlerName标识，由JS来处理handler的调用\n\t\t\t */\n\t\t\tif (callbackId) {\n\t\t\t\tcallbacks[callbackId](resultObj);\n\t\t\t\tdelete callbacks[callbackId];\n\t\t\t} else if (resultObj.handlerName) {\n\t\t\t\tvar handler = messageHandlers[resultObj.handlerName];\n\t\t\t\tif (typeof handler === 'undefined') return;\n\n\t\t\t\tfor (var i = 0; i < handler.length; i++) {\n\t\t\t\t\ttry {\n\t\t\t\t\t\tdelete resultObj.handlerName;\n\t\t\t\t\t\thandler[i](resultObj);\n\t\t\t\t\t} catch (exception) {\n\t\t\t\t\t\tif (typeof console != 'undefined') {\n\t\t\t\t\t\t\tconsole.log(\"WebViewJavascriptBridge: WARNING: javascript handler threw.\", resultObj, exception);\n\t\t\t\t\t\t}\n\t\t\t\t\t}\n\t\t\t\t}\n\t\t\t}\n\t\t};\n```\n## `regristerHandler` 调用流程\n<!--以onSelectContact为例-->\n* 先给出调用示例图\n![](/post-images/1570620158840.png)\n可以看出一共涉及了三个流程：\n* 在客户端中注册`EventBus`\n``` java\n  EventBus.getInstance().register(EventConst.MERCHANT_OAUTH.OAUTH_VERIFY, mOnOAuthVerifiedResult);\n```\n* 在前端注册一个方法\n``` java\nonSelectContact: registerHandlerWrapper('onSelectContact'),\n```\n* `EventBus`去监听这个方法\n``` java\nregisterActivityForResultCallback(BPNavigationHelper.REQUEST_CHOOSE_CONTACT, (resultCode, data) -> {\n            if (resultCode == RESULT_OK) {\n                String number = data.getStringExtra(\n                        BPPickPhoneContactView.KEY_CONTACT_NUMBER);\n                String name = data.getStringExtra(BPPickPhoneContactView.KEY_CONTACT_NAME);\n                mBridge.callHandler(new BPGetContactsInfoWebCall(BPWebUIRouter.RESULT_CODE.RESULT_SUCCESS, BPWebUIRouter.CALL_H5_HANDLE_NAME.HANDLER_NAME_ON_SELECT_CONTACTS, name, number).toDataString());\n```\n* 调用`BPWebBridge``callHandler`\n``` java\npublic void callHandler(String data) {\n        Handler webViewHandler = webView.getHandler();\n        if (webViewHandler != null) {\n            webViewHandler.post(() -> {\n                String js =\n                        String.format(BRIDGE_RESULT_BACK_TEMPLATE, \"\", data);\n                BBAppLogger.i(\"send result back: %1$s\", js);\n                webView.loadUrl(js);\n            });\n        }\n    }\n```\n* 后续的调用（`oReceive`）,看上面的代码\n\n",
+      "data": {
+        "title": "JSBridge",
+        "date": "2019-09-29 12:06:38",
+        "tags": [],
+        "published": false,
+        "hideInList": false,
+        "feature": null,
+        "isTop": false
+      },
+      "isEmpty": false,
+      "excerpt": "",
+      "abstract": "",
+      "fileName": "jsbridge"
+    },
+    {
+      "content": "<!--以React为示例-->\n# 前端埋点问题\n\n## 曝光\n* 场景分布\n    > 页面中的元素出现在当前的视窗之中\n\n* 实现思路\n>  * 针对于SPA页面的特性，对于页面的整体曝光（单个路由的PV）\n``` javascript\ncomponentDidMount() {\n    Logger.trackingRecord(TRACKING.PV);\n}\n```\n> * 对于页面中某个元素的曝光\n    1. 在这个场景中，我们可以对页面中的曝光逻辑进行拆分![](https://qingwu-aby.github.io//post-images/1569726066873.png)\n        如上图所示，在这个场景中需要曝光的元素在一个视口中能够全部展示出来，我们可以在一个组件中将这个元素的所有埋点全部曝光出来\n        <!-- 凑个字数 -->\n``` javascript\n    renderHeader() {\n        <Impr trackingInfo={TRACKING.HEADER}>\n            <div className='header'>Header</div>\n        </Impr>\n    }\n    renderContent() {\n        <Impr trackingInfo={TRACKING.CONTENT}>\n            <div className='content'>Content</div>\n        </Impr>\n    }   \n    renderButton() {\n        <Impr trackingInfo={TRACKING.BUTTON}>\n            <div className='button'>Button</div>\n        </Impr>\n    }\n    render() {\n        return (\n            <React.Fragment>\n        {\n            renderHeader()\n            renderContent()\n            renderButton()\n        }\n        <React.Fragemnt>\n        )\n    }\n```\n``` javascript\nclass Impr extends React.Component {\n    comsponentDidMount() {\n        Logger.trackingRecord(this.props.imprTracking)\n    }\n    render() {\n        return this.props.children;\n    }\n}\n```\n        这是一个最简单的场景应用，如果页面上有大量的元素存在，并且相当一部分不在当前的视口中的时候，这种做法会对曝光的数据带来不可控（你不知道元素是否已经被用户看到了）。\n    2. 这个时候就可以引入新的方式`Intersection-observe`：\n        因为可见性的本质是目标元素与当前视口出现的交叉区域。文档[IntersectionOberver](https://developer.mozilla.org/en-US/docs/Web/API/Intersection_Observer_API)\n        ![](https://qingwu-aby.github.io//post-images/1569744502847.jpg)\n        如图所示我们只需要上报已经出现在视口中的元素就可以了，下方不在当前视口中的元素将不会曝光，每个元素在都会被observe，在监听事件结束之后将会销毁确保曝光逻辑只会出现一次\n``` javascript\nclass Impr extends React.Component {\n    registeryImprComponent() {\n        new IntersectionObserver(this.callback, params)\n    }\n    callback() {\n        // 设置交叉阈值（触发打点上报逻辑） 以及曝光时间\n    }\n}\n```\n    3. 当然也可以监听`scroll`事件，通过计算目标元素`element.getBoundingClientRect()`获取元素与容器之间的距离，但是这种情况会频繁触发`scroll`导致严重的性能问题  \n\n## 点击\n* 场景分布\n    > * 点击某个元素\n    > * 触发原生操作\n\n* 实现思路\n> * 元素点击\n    1. 点击事件\n        * 通过侵入型事件来触发上报操作\n  ``` javascript\n  jumpToNext() {\n      // 其他逻辑\n      Logger.trackingRecord(TRACKING.CLICK)\n  }\n  ```\n\n        * 通过方法装饰器来触发\n\n``` javascript\n    @Logger.trackingRecord(TRACKING.CLICK)\n    jumpToNext() {\n        // 其他    \n    }\n```\n    1. 监听原生返回\n        * 装饰器触发\n        * 设置`BaseComponet`，组件通过继承父类的方法或者通过实现的方式来完成上报操作\n\n``` javascript\nclass BaseComponent extends React.Component {\n    componentDidMount() {\n        this.props.history.listen((location, action) => {\n            //action === POP\n            // Logger.trackingRecord(this.getBaseParams());\n        })\n    }\n    getBaseParams() {\n        // 方法在这定义\n    }\n}\nclass Page extends BaseComponent {\n    componentDidMount() {\n        super.componentDidMount()\n        // todo\n    }\n    getBaseParams() {\n        // you can set trackingParams\n    }\n}\n```\n\n## visibility\n> 场景分布\n\n    > 应用中视窗元素被隐藏（后台运行）",
+      "data": {
+        "title": "曝光和点击",
+        "date": "2019-09-23 11:04:37",
+        "tags": [
+          "埋点"
+        ],
+        "published": true,
+        "hideInList": false,
+        "feature": null,
+        "isTop": false
+      },
+      "isEmpty": false,
+      "excerpt": "",
+      "abstract": "",
+      "fileName": "tracking"
+    }
+  ],
+  "tags": [
+    {
+      "name": "React",
+      "slug": "Bo2MqkwLq",
+      "used": true
+    },
+    {
+      "name": "JS基础",
+      "slug": "WHkzkmUVJ",
+      "used": true
+    },
+    {
+      "index": -1,
+      "name": "算法和数据结构",
+      "slug": "HDG5upSe4",
+      "used": true
+    },
+    {
+      "name": "todo",
+      "slug": "o-FN4Uam8n",
+      "used": true
+    },
+    {
+      "index": 0,
+      "name": "埋点",
+      "slug": "iheqDLI6k",
+      "used": true
+    },
+    {
+      "index": -1,
+      "name": "一些问题",
+      "slug": "H8FJNbNzO",
+      "used": true
+    },
+    {
+      "index": -1,
+      "name": "nestJs",
+      "slug": "ulLDOo7JD",
+      "used": false
+    },
+    {
+      "index": -1,
+      "name": "数据上报",
+      "slug": "ECkt7EOIF",
+      "used": false
+    }
+  ],
+  "menus": [
+    {
+      "link": "/",
+      "name": "首页",
+      "openType": "Internal"
+    },
+    {
+      "link": "/archives",
+      "name": "归档",
+      "openType": "Internal"
+    },
+    {
+      "link": "/tags",
+      "name": "标签",
+      "openType": "Internal"
+    },
+    {
+      "link": "/post/about",
+      "name": "关于",
+      "openType": "Internal"
+    }
+  ]
+}
