@@ -1,5 +1,5 @@
 ---
-title: '推进节奏'
+title: '学习方案'
 date: 2020-08-09 14:44:25
 tags: [JS基础,算法和数据结构,todo]
 published: true

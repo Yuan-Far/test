@@ -5,7 +5,7 @@
     "dateFormat": "YYYY-MM-DD",
     "feedCount": 10,
     "feedFullText": false,
-    "footerInfo": "Powered by <a href=\"https://github.com/getgridea/gridea\" target=\"_blank\">Gridea</a>",
+    "footerInfo": "",
     "postPageSize": 10,
     "postPath": "post",
     "postUrlFormat": "SHORT_ID",

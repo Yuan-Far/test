@@ -164,3 +164,19 @@ div::-webkit-scrollbar-thumb {
 若元素 display: none，那么 offsetWidth/offsetHeight 为 0。
 > * offsetHeight 的值不包括伪元素的高度，例如 :before 和 :after。
 若元素内部包含未清除浮动的子元素，那么将不包含这些浮动元素的宽高。
+
+
+# React区分组件类型
+> React的组件可以分为`ClassComponent`、`FunctionComponent`
+> `ClassComponent`对应的`Element type`是`当前Class`自身，`FunctionComponent`对应的`Element type`是函数组件自身
+
+``` javascript
+AppClass instanceof Function === true
+AppFunc instanceOf === true
+```
+> 通过引用类型是无法区分当前组件的`type`的
+> 可以通过调用`ClassComponent`原型链的`isReactComponent`属性判断是否是`classComponent`
+
+``` javascript
+ClassComponent.prototype.isReactComponent = {}
+```
