@@ -180,3 +180,7 @@ AppFunc instanceOf === true
 ``` javascript
 ClassComponent.prototype.isReactComponent = {}
 ```
+
+# base64算法
+
+> 使用`4字节`替换`3字节`,文件大小会增长**1.33**

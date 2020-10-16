@@ -159,6 +159,19 @@ export default class LinkList {
     removeLast() {
         return this.remove(this.size - 1);
     }
+    reserve(list) {
+        // if (list === null || list.next === null) return list
+        let prev = null
+        console.log(list)
+        let curr = list
+        while (curr) {
+          const temp = curr.next
+          curr.next = prev
+          prev = curr
+          curr = temp
+        }
+        return prev
+      }
 
     toString() {
         let linkInfo = `----LinkList:---- <br /> size: ${this.getSize()} <br />`;
@@ -169,6 +182,13 @@ export default class LinkList {
         //     linkInfo += `${node.element}->`;
         //     node = node.next;
         // }
+        const a = [2, 4, 3]
+        for (let i = 0; i < a.length; i++) {
+            this.insertNode(i, a[i]);
+            // console.log(linkList.toString());
+        }
+        this.reserve(node)
+        console.log('-=-=', this.reserve(node))
         while(node.next !== null) {
             linkInfo += `${node.element}->`;
             node = node.next;
