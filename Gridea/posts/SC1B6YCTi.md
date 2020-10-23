@@ -299,12 +299,102 @@ const snapshot = instance.getSnapshotBeforeUpdate(
     prevState,
 );
 ```
+`getSnapshotBeforeUpdate`在`commit阶段`内的`before mutation`阶段调用的，由于`commit`是同步进行的，所以不会出现多次调用的问题
 
+### 调度useEffect
+`scheduleCallback`方法就是由`Scheduler`模块提供，用于某个优先级异步调度一个回调函数
 
+``` javascript
+// 调度useEffect
+if ((flags & Passive) !== NoFlags) {
+    // If there are passive effects, schedule a callback to flush at
+    // the earliest opportunity.
+    if (!rootDoesHavePassiveEffects) {
+      rootDoesHavePassiveEffects = true;
+      scheduleCallback(NormalSchedulerPriority, () => {
+        flushPassiveEffects();
+        return null;
+      });
+    }
+  }
+```
+此处，被异步调度的回调函数就是触发`useEffect`的方法`flushPassiveEffects`
 
+#### 如何异步调度
 
+``` javascript
+export function flushPassiveEffects(): boolean {
+  // Returns whether passive effects were flushed.
+  if (pendingPassiveEffectsRenderPriority !== NoSchedulerPriority) {
+    const priorityLevel =
+      pendingPassiveEffectsRenderPriority > NormalSchedulerPriority
+        ? NormalSchedulerPriority
+        : pendingPassiveEffectsRenderPriority;
+    pendingPassiveEffectsRenderPriority = NoSchedulerPriority;
+    if (decoupleUpdatePriorityFromScheduler) {
+      const previousLanePriority = getCurrentUpdateLanePriority();
+      try {
+        setCurrentUpdateLanePriority(
+          schedulerPriorityToLanePriority(priorityLevel),
+        );
+        return runWithPriority(priorityLevel, flushPassiveEffectsImpl);
+      } finally {
+        setCurrentUpdateLanePriority(previousLanePriority);
+      }
+    } else {
+      return runWithPriority(priorityLevel, flushPassiveEffectsImpl);
+    }
+  }
+  return false;
+}
+```
+通过之前的了解`render阶段`：`Fiber节点`更新过程中的副作用包括
+1. 插入`DOM节点`（Placement）
+2. 删除`DOM节点`（Deletion）
+3. 更新`DOM节点`（Update）
+除此之外，当一个`FunctionComponent`含有`useEffect`或者`useLayoutEffect`的时候，他对应的`Fiber节点`也会被赋值`flags`
 
+在`commitRootImpl`方法中会循环遍历`rootWithPendingPassiveEffects`执行有副作用的回调函数
 
+整个`useEffect`的异步调用分为三个部分：
+1. `before mutation`阶段在`scheduleCallback`中调度`flushPassiveEffects`
+2. `layout`阶段之后将effectList赋值给`rootWithPendingPassiveEffects`
+3. `scheduleCallback`触发`flushPassiveEffects`，`flushPassiveEffects`内部遍历`rootWithPendingPassiveEffects`
+
+> `useEffect`: 在浏览器完成布局与绘制之后，传递给useEffect的函数会延迟调用
+
+使用`useEffect`异步执行的原因主要是为了纺织同步执行时阻塞浏览器的渲染
+
+### 总结
+`before mutation`阶段会通过`commitBeforeMutationEffects`去遍历有`effect`的`Fiber节点`：
+1. 处理DOM节点**渲染/删除**后的`Focus`/`onblur`逻辑
+2. 调用`getSnapshotBeforeUpdate`生命周期
+3. 调度`useEffect`
+
+## mutation阶段
+与`before mutation阶段`相似的是`mutation阶段`也会去遍历`effect`的`Fiber节点`，不同的是：`mutation阶段`调用的是`commitBeforeMutationEffects`方法
+``` javascript
+ // The next phase is the mutation phase, where we mutate the host tree.
+    commitMutationEffects(finishedWork, root, renderPriorityLevel);
+
+    if (shouldFireAfterActiveInstanceBlur) {
+      afterActiveInstanceBlur();
+    }
+    resetAfterCommit(root.containerInfo);
+
+    // The work-in-progress tree is now the current tree. This must come after
+    // the mutation phase, so that the previous tree is still current during
+    // componentWillUnmount, but before the layout phase, so that the finished
+    // work is current during componentDidMount/Update.
+    root.current = finishedWork;
+```
+#### 总结
+`mutation阶段`会遍历有`effect`的`Fiber节点`，主要方法在`commitMutationEffects`，根据`flags`状态的不同调用不同的处理方法去处理`Fiber`
+## layout阶段
+* 在当前阶段代码都在`DOM`渲染完成(`mutation阶段`)之后执行的
+* 当前阶段触发的生命周期钩子和`hook`可以直接访问到已经改变之后的`DOM`，当前阶段可以直接参与`DOM layout`的阶段
+
+### 
 
 
 
