@@ -973,7 +973,22 @@ figure figcaption {
 .img-box img {
   width: 400px;
   height: 200px;
+  background-color: rgb(195, 195, 195);
   object-fit: cover;
+}
+
+.empty-img {
+  position: relative;
+  
+  &::before {
+    content: 'NO IMAGE';
+    position: absolute;
+    top: calc(50% - 18px);
+    font-size: 36px;
+    font-weight: bold;
+    left: 34%;
+    color: #f1f1f1;
+  }
 }
 
 .fh5co-meta a {

@@ -4,7 +4,7 @@ date: 2020-10-20 17:34:01
 tags: []
 published: true
 hideInList: false
-feature: 
+feature: /post-images/-b1BVJBAF.jpg
 isTop: false
 ---
 > 大量同质化代码的处理

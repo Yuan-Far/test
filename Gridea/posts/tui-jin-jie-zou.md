@@ -1,5 +1,5 @@
 ---
-title: '学习方案'
+title: '前端的一些重点'
 date: 2020-08-09 14:44:25
 tags: [JS基础,算法和数据结构,todo]
 published: true
@@ -68,6 +68,4 @@ isTop: false
     1.  `webpack`
     2.  `babel`
 
-** 数据结构与算法**
-**JS基础**
-**React+Redux**
+

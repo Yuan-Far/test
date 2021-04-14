@@ -1,24 +1,6 @@
 {
   "posts": [
     {
-      "content": "\n<!-- more -->\n",
-      "data": {
-        "title": "Rust--1",
-        "date": "2021-04-07 17:24:04",
-        "tags": [
-          "Rust"
-        ],
-        "published": true,
-        "hideInList": false,
-        "feature": null,
-        "isTop": false
-      },
-      "isEmpty": false,
-      "excerpt": "",
-      "abstract": "",
-      "fileName": "7V8FzDguP"
-    },
-    {
       "content": "`ref`在挂载的时候传入`DOM`结构，写在的时候传入`null`\n`ref.current`可以更改\n\n`React`中对`Div`的监听需要使用`onScrollCapture`\n\n> 状态变化较为复杂的时候可以使用`useRef`来保存页面中的状态",
       "data": {
         "title": "react的一些小问题",
@@ -42,7 +24,7 @@
         "tags": [],
         "published": true,
         "hideInList": false,
-        "feature": null,
+        "feature": "/post-images/-b1BVJBAF.jpg",
         "isTop": false
       },
       "isEmpty": false,
@@ -261,9 +243,9 @@
       "fileName": "0rtsFvZCm"
     },
     {
-      "content": "\n<!-- more -->\n1. Js基础\n    1. `Promise`\n    2. `setTimeout`和`setInterval`\n    3. `eventloop`\n    4. `prototype`\n    5. `proxy`\n    6. ES静态分析\n    7. 垃圾回收\n    8. `call，apply，bind`\n    9. 闭包与内存泄漏\n    10. 浏览器GC\n    11. 节流与防抖\n    12. `requestIdleCallback`\n    13. 排序`sort`方法的应用，以及是否对字符串排序的原理\n    14. 深浅拷贝\n    15. 数组去重\n2. React 源码分析\n    1. 虚拟dom\n    2. `hooks`\n    3. `fiber` 和 `requestIdleCallback`\n3. redux\n    1. `compose`实现逻辑\n    2. `saga`\n    3. `normlize`\n    4. 不可变数据类型immutable\n4. `NodeJS`\n    1. 事件系统（eventbus）\n    2. 缓冲队列\n5. 数据结构\n    1. 基础数据结构（数组与链表）\n    2. 树，图\n6. 算法\n    1. 基础排序\n    2. 动态规划\n    3. 树相关算法\n7. 前端性能调优\n    1. `FCP/FMP/FR`\n8. 前端安全问题\n    1. `csrf` 跨站脚本攻击\n9.  前端错误监控与上报\n    1.  sentry\n    2.  kibana\n    3.  异常的捕获及其区别\n10. 计算机网络\n    1. TCP/IP\n    2. HTTP\n    3. HTTPS\n11. 浏览器相关\n    1.  渲染机制\n    2.  设计模式\n12. 操作系统相关\n    1.  进程和线程\n13. `nginx`\n    1.  负载均衡\n    2.  反向代理\n14. 前端项目打包与脚手架以及工具类\n    1.  `webpack`\n    2.  `babel`\n\n** 数据结构与算法**\n**JS基础**\n**React+Redux**\n",
+      "content": "\n<!-- more -->\n1. Js基础\n    1. `Promise`\n    2. `setTimeout`和`setInterval`\n    3. `eventloop`\n    4. `prototype`\n    5. `proxy`\n    6. ES静态分析\n    7. 垃圾回收\n    8. `call，apply，bind`\n    9. 闭包与内存泄漏\n    10. 浏览器GC\n    11. 节流与防抖\n    12. `requestIdleCallback`\n    13. 排序`sort`方法的应用，以及是否对字符串排序的原理\n    14. 深浅拷贝\n    15. 数组去重\n2. React 源码分析\n    1. 虚拟dom\n    2. `hooks`\n    3. `fiber` 和 `requestIdleCallback`\n3. redux\n    1. `compose`实现逻辑\n    2. `saga`\n    3. `normlize`\n    4. 不可变数据类型immutable\n4. `NodeJS`\n    1. 事件系统（eventbus）\n    2. 缓冲队列\n5. 数据结构\n    1. 基础数据结构（数组与链表）\n    2. 树，图\n6. 算法\n    1. 基础排序\n    2. 动态规划\n    3. 树相关算法\n7. 前端性能调优\n    1. `FCP/FMP/FR`\n8. 前端安全问题\n    1. `csrf` 跨站脚本攻击\n9.  前端错误监控与上报\n    1.  sentry\n    2.  kibana\n    3.  异常的捕获及其区别\n10. 计算机网络\n    1. TCP/IP\n    2. HTTP\n    3. HTTPS\n11. 浏览器相关\n    1.  渲染机制\n    2.  设计模式\n12. 操作系统相关\n    1.  进程和线程\n13. `nginx`\n    1.  负载均衡\n    2.  反向代理\n14. 前端项目打包与脚手架以及工具类\n    1.  `webpack`\n    2.  `babel`\n\n\n",
       "data": {
-        "title": "学习方案",
+        "title": "前端的一些重点",
         "date": "2020-08-09 14:44:25",
         "tags": [
           "JS基础",
@@ -297,14 +279,14 @@
       "fileName": "hui-su-suan-fa-1-quan-pai-lie"
     },
     {
-      "content": "> 决策过程\n```\n// base case\ndp[0][0]... = base\n    // 状态转移过程\n    for(状态1 in 状态1所有值) {\n        for (状态2 in 状态2所有值) {\n            ...\n            dp[状态1][状态2]... = 最值(选择1， 选择2， ...)\n        }\n    }\n```\n\n1. 自顶向下分析\n   ``` javascript\n   /**\n     * @description 自顶向下分析\n     * @param {*} coins \n     * @param {*} amount \n     */\n\n    const coinChange = (coins, amount) => {\n    const memo = []\n    function dp(n) {\n        if (memo[n]) return memo[n]\n        if (n === 0) return 0\n        if (n < 0) return -1\n        let res = amount + 1\n        for (let coin in coins) {\n            // 获得子问题\n        const sub = dp(n - coins[coin])\n        if (sub === -1) continue\n        res = min(res, 1 + sub)\n        }\n        memo[n] = res\n        return res !== amount + 1 ? memo[n] : -1\n    }\n    return dp(amount)\n    }\n\n    console.log('----', coinChange(arr, 11))\n\n   ```\n2.  自底向上分析\n   ``` javascript\n   var coinChange = function(coins, amount) {\n    const min = (a, b) => a > b ? b : a\n    const dp = new Array(amount + 1).fill(amount + 1)\n    // define init value\n    dp[0] = 0\n    // 状态转移\n    for(let i = 0; i< dp.length; i++) {\n        for(let coin in coins) {\n            if (i - coins[coin]) continue\n            dp[i] = min(dp[i], 1 + dp[i - coins[coin]])\n        }\n    }\n    return (dp[amount] === amount + 1) ? -1 : dp[amount]\n    };\n   ```",
+      "content": "\n<!-- more -->\n> 决策过程\n```\n// base case\ndp[0][0]... = base\n    // 状态转移过程\n    for(状态1 in 状态1所有值) {\n        for (状态2 in 状态2所有值) {\n            ...\n            dp[状态1][状态2]... = 最值(选择1， 选择2， ...)\n        }\n    }\n```\n\n1. 自顶向下分析\n   ``` javascript\n   /**\n     * @description 自顶向下分析\n     * @param {*} coins \n     * @param {*} amount \n     */\n\n    const coinChange = (coins, amount) => {\n    const memo = []\n    function dp(n) {\n        if (memo[n]) return memo[n]\n        if (n === 0) return 0\n        if (n < 0) return -1\n        let res = amount + 1\n        for (let coin in coins) {\n            // 获得子问题\n        const sub = dp(n - coins[coin])\n        if (sub === -1) continue\n        res = min(res, 1 + sub)\n        }\n        memo[n] = res\n        return res !== amount + 1 ? memo[n] : -1\n    }\n    return dp(amount)\n    }\n\n    console.log('----', coinChange(arr, 11))\n\n   ```\n2.  自底向上分析\n   ``` javascript\n   var coinChange = function(coins, amount) {\n    const min = (a, b) => a > b ? b : a\n    const dp = new Array(amount + 1).fill(amount + 1)\n    // define init value\n    dp[0] = 0\n    // 状态转移\n    for(let i = 0; i< dp.length; i++) {\n        for(let coin in coins) {\n            if (i - coins[coin]) continue\n            dp[i] = min(dp[i], 1 + dp[i - coins[coin]])\n        }\n    }\n    return (dp[amount] === amount + 1) ? -1 : dp[amount]\n    };\n   ```",
       "data": {
         "title": "动态规划2---凑零钱",
         "date": "2020-06-18 18:18:18",
         "tags": [],
         "published": true,
         "hideInList": false,
-        "feature": null,
+        "feature": "/post-images/dong-tai-gui-hua-2-cou-ling-qian.jpg",
         "isTop": false
       },
       "isEmpty": false,
@@ -320,7 +302,7 @@
         "tags": [],
         "published": true,
         "hideInList": false,
-        "feature": null,
+        "feature": "/post-images/dong-tai-gui-hua-1fei-bo-na-qi-shu-lie-shuo-qi.jpg",
         "isTop": false
       },
       "isEmpty": false,
@@ -338,7 +320,7 @@
         ],
         "published": true,
         "hideInList": false,
-        "feature": null,
+        "feature": "/post-images/yi-xie-wen-ti.png",
         "isTop": false
       },
       "isEmpty": false,
@@ -383,12 +365,6 @@
   ],
   "tags": [
     {
-      "index": -1,
-      "name": "Rust",
-      "slug": "uDnwdNXwe",
-      "used": true
-    },
-    {
       "name": "React",
       "slug": "Bo2MqkwLq",
       "used": true
@@ -423,6 +399,12 @@
     },
     {
       "index": -1,
+      "name": "Rust",
+      "slug": "uDnwdNXwe",
+      "used": false
+    },
+    {
+      "index": -1,
       "name": "nestJs",
       "slug": "ulLDOo7JD",
       "used": false
@@ -454,7 +436,7 @@
     },
     {
       "link": "/archives",
-      "name": "归档",
+      "name": "分类",
       "openType": "Internal"
     },
     {

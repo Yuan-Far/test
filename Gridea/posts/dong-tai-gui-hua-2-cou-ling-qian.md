@@ -4,9 +4,11 @@ date: 2020-06-18 18:18:18
 tags: []
 published: true
 hideInList: false
-feature: 
+feature: /post-images/dong-tai-gui-hua-2-cou-ling-qian.jpg
 isTop: false
 ---
+
+<!-- more -->
 > 决策过程
 ```
 // base case

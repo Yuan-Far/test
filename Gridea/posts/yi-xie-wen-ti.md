@@ -4,7 +4,7 @@ date: 2020-05-22 18:13:19
 tags: [一些问题]
 published: true
 hideInList: false
-feature: 
+feature: /post-images/yi-xie-wen-ti.png
 isTop: false
 ---
 

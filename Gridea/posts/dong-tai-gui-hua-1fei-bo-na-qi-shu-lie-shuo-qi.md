@@ -4,7 +4,7 @@ date: 2020-06-17 17:47:18
 tags: []
 published: true
 hideInList: false
-feature: 
+feature: /post-images/dong-tai-gui-hua-1fei-bo-na-qi-shu-lie-shuo-qi.jpg
 isTop: false
 ---
 > 核心问题是枚举
