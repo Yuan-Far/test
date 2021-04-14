@@ -1,0 +1,89 @@
+<!-- jQuery -->
+<script src="<%= themeConfig.domain %>/media/scripts/jquery.min.js"></script>
+<!-- img lazy load -->
+<script src="<%= themeConfig.domain %>/media/scripts/jquery.lazyload.min.js"></script>
+<!-- jQuery Easing -->
+<script src="<%= themeConfig.domain %>/media/scripts/jquery.easing.1.3.js"></script>
+<!-- Bootstrap -->
+<script src="<%= themeConfig.domain %>/media/scripts/bootstrap.min.js"></script>
+<!-- Waypoints -->
+<script src="<%= themeConfig.domain %>/media/scripts/jquery.waypoints.min.js"></script>
+<!-- Main JS -->
+<script src="<%= themeConfig.domain %>/media/scripts/main.js"></script>
+<!-- Md5 Min JS -->
+<script src="<%= themeConfig.domain %>/media/scripts/md5.min.js"></script>
+<!-- katex -->
+<!--<script src="https://cdn.bootcss.com/KaTeX/0.11.1/katex.min.js"></script>-->
+<!-- highlight -->
+<script src="https://cdn.bootcss.com/highlight.js/9.15.8/highlight.min.js"></script>
+
+
+<script type="application/javascript">
+    // 代码高亮
+    hljs.initHighlightingOnLoad();
+
+    // img 懒加载
+    $(function () {
+        $("img.lazy").lazyload({
+            effect: "fadeIn",  // 懒加载动画
+            threshold: 180  // 在图片距离屏幕180px时提前载入
+        });
+        // tooltip
+        $('[data-toggle="tooltip"]').tooltip();
+
+        // 目录
+        $('#tool-toc').click(function () {
+            $('.post-toc').toggle();
+        });
+    });
+
+    <% if (site.customConfig.imgDisabled == 1) { %>
+        var allImg = $("img");
+        allImg.on("contextmenu", function () {
+            return false;
+        });
+        allImg.on("dragstart", function () {
+            return false;
+        });
+    <% } %>
+</script>
+
+<% if (typeof commentSetting !== 'undefined' && commentSetting.showComment) { %>
+
+    <% if (commentSetting.commentPlatform === 'gitalk') { %>
+        <script src="https://cdn.bootcss.com/gitalk/1.5.0/gitalk.min.js"></script>
+        <script>
+
+            var gitalk = new Gitalk({
+                clientID: '<%= commentSetting.gitalkSetting.clientId %>',
+                clientSecret: '<%= commentSetting.gitalkSetting.clientSecret %>',
+                repo: '<%= commentSetting.gitalkSetting.repository %>',
+                owner: '<%= commentSetting.gitalkSetting.owner %>',
+                admin: ['<%= commentSetting.gitalkSetting.owner %>'],
+                id: md5(location.pathname),      // Ensure uniqueness and length less than 50
+                distractionFreeMode: false  // Facebook-like distraction free mode
+            })
+
+            gitalk.render('gitalk-container')
+
+        </script>
+    <% } %>
+
+    <% if (commentSetting.commentPlatform === 'disqus') { %>
+        <script src="https://unpkg.com/disqusjs@1.1/dist/disqus.js"></script>
+        <script>
+
+            var options = {
+                shortname: '<%= commentSetting.disqusSetting.shortname %>',
+                apikey: '<%= commentSetting.disqusSetting.apikey %>',
+            }
+            if ('<%= commentSetting.disqusSetting.api %>') {
+                options.api = '<%= commentSetting.disqusSetting.api %>'
+            }
+            var dsqjs = new DisqusJS(options)
+
+        </script>
+    <% } %>
+
+<% } %>
+

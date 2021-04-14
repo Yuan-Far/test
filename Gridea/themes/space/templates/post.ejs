@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <%- include('./_blocks/head', { siteTitle: `${post.title} | ${themeConfig.siteName}` }) %>
+</head>
+<body>
+    <%- include('./_blocks/header') %>
+
+    <!--  <a href="#" class="fh5co-post-prev"><span>👈 Prev</span></a>-->
+    <!--  <a href="#" class="fh5co-post-next"><span>Next 👉</span></a>-->
+
+    <!-- 等gridea出自定义页面功能再优化一下 -->
+    <% if (post.title.toLowerCase == 'links' || post.title == '友链') { %>
+        <%- include('./layouts/links') %>
+    <% } else if(post.title.toLowerCase == 'album' || post.title == '图廊') { %>
+        <%- include('./layouts/album') %>
+    <% } else { %>
+        <%- include('./layouts/post-detail') %>
+    <% } %>
+
+    <!-- 返回顶部 -->
+    <%- include('./_blocks/tool') %>
+
+    <%- include('./_blocks/footer') %>
+
+    <%- include('./_blocks/scripts') %>
+</body>
+</html>

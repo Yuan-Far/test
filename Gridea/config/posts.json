@@ -1,6 +1,40 @@
 {
   "posts": [
     {
+      "content": "\n<!-- more -->\n",
+      "data": {
+        "title": "Rust--1",
+        "date": "2021-04-07 17:24:04",
+        "tags": [
+          "Rust"
+        ],
+        "published": true,
+        "hideInList": false,
+        "feature": null,
+        "isTop": false
+      },
+      "isEmpty": false,
+      "excerpt": "",
+      "abstract": "",
+      "fileName": "7V8FzDguP"
+    },
+    {
+      "content": "`ref`在挂载的时候传入`DOM`结构，写在的时候传入`null`\n`ref.current`可以更改\n\n`React`中对`Div`的监听需要使用`onScrollCapture`\n\n> 状态变化较为复杂的时候可以使用`useRef`来保存页面中的状态",
+      "data": {
+        "title": "react的一些小问题",
+        "date": "2020-12-15 16:05:52",
+        "tags": [],
+        "published": false,
+        "hideInList": false,
+        "feature": null,
+        "isTop": false
+      },
+      "isEmpty": false,
+      "excerpt": "",
+      "abstract": "",
+      "fileName": "wTiN_rS_h"
+    },
+    {
       "content": "> 大量同质化代码的处理\n<!-- more -->\n\n> 页面的基础信息统一放在`store`中去处理\n``` javascript\nconst initialState = {\n    cur: '',            //当前选中组件的guid\n    total: 0,           //组件总数\n    count: 0,           //组件已加载个数，用于判断初次加载是否完毕\n    componentPool: {\n        guid: '',\n        type: '',\n        // ...\n        flags: delete | add | update\n    },  //所有组件（包含容器组件）的组件实例，key为guid\n    error: {\n        guid: [],       //错误组件的guid[]\n        message: []     //以及对应的错误信息\n    }\n};\n```\n\n### 编辑器页面获取组件：\n1. 自上而下的进行数据包的分发\n2. 组件实例化，根据`rawContent`将上次编辑的数据进行还原\n\n### 前端编辑完成之后交付给后端需要两种数据结构：\n1. `rawContent`: 原始的json结构--用于在编辑页面的数据快速恢复【`JSON.parse(rawContent)`】\n2. `renderTreeContent`: 面向ToC的数据页面--页面上经过计算完成的数据【`convet(rawContent)`】\n\n### 编辑数据是否更新\n1. 校验`rawContent`和上一次保存之后的数据是否发生了变化\n2. 页面复制的时候为每一个组件的`guid`重新赋值\n3. 将组件的信息放在 `localStorage`中\n\n### 数据保存\n1. 在页面编辑栏发生`更新`/`删除`/`添加`/操作的时候对该组件增加`flags`\n2. 在进行保存的时候直接保存对应的`store`中的数据结构（此时需要移除`flags`为删除状态的操作）\n3. ** `撤销`操作**：维护一个`past`数组，初始状态为`[]`，以及预设中间状态`preset`,这次操作在组件实例化完成之后进行，`preset`为组件实例化之后的对象\n   *  所有的组件操作都会触发一个`action`，当触发`action`的时候去调用这个`reducer`\n   * 每次新增或者更改的时候保存上一次页面状态，放入数组之中\n   * 此时维护的`past`数组是当前页面上所有的未保存的状态\n   * 触发`undo`的时候，`preset`状态更新为`past[past.length - 1]`,同时增加回撤`future`数组\n\n``` javascript\n// init \ncase TYPES.TOOLS.UNDO:\n    const previous = past[past.length - 1];\n    const newPast = past.slice(0, past.length - 1);\n    return {\n        past: newPast,\n        present: previous,\n        future: [present, ...future]\n    };\ncase TYPES.TOOLS.REDO:\n    const next = future[0];\n    const newFuture = future.slice(1);\n    return {\n        past: [...past, present],\n        present: next,\n        future: newFuture\n    };\ncase TYPES.COMPONENT.COMPONENTS_INSTANTIATION_END: //加载完毕后开始计算redo undo\n    return {\n        past: [],\n        present: reducer(present, action),\n        future: []\n    }\ndefault:\n    //将其他 action 委托给原始的 reducer 处理\n    const newPresent = reducer(present, action);\n    if (present === newPresent) {\n        return state;\n    }\n    return {\n        past: [...past, present],\n        present: newPresent,\n        future: []\n    };\n```\n\n## 组件原始数据结构\n``` javascript\n[\n    {\n        gid: '',\n        name: '',\n        ename: '',\n        props: {}\n        flags: {},\n        version: '',\n        position: '', //当前位置\n    },\n    {},\n]\n```",
       "data": {
         "title": "页面可视化",
@@ -295,7 +329,7 @@
       "fileName": "dong-tai-gui-hua-1fei-bo-na-qi-shu-lie-shuo-qi"
     },
     {
-      "content": "\n### 关于非受控组件在异步操作中变更defaultValue信息的解决方案\n>> 可以增加一个key值\n\n\n### 正则:\n>> 手机号：`/^1(?:3\\d|4[4-9]|5[0-35-9]|6[67]|7[013-8]|8\\d|9\\d)\\d{8}$/`\n\n> fontSize会导致div所占实际区块变大（在inspector中无法找到，但是实际中是会覆盖掉其他div）\n\n\n\n### 代码执行顺序：\n> `macrotasks: setTimeout, setInterval, setImmediate, I/O, UI rendering`\n\n> `microtasks: process.nextTick, Promises, Object.observe(废弃), MutationObserver`\n\n\n> 同步代码——>microTask——>macroTask\n>> eg: `https://jakearchibald.com/2015/tasks-microtasks-queues-and-schedules/`\n\n> iOS问题   \n>> `text-decoration-line: line-through;` -> `text-decoration: line-through;`\n\n\n### 列表中的两种组件，排版出错\n>> `vertical-align: top;`\n\n### React-Router\n\n> 嵌套路由中次级路由无法生效， 确认一级路由与次级路由的衔接是否使用了`exact={true}`\n\n\n### 页面中的请求数据处理\n\n> 1. 判断是否需要这个请求的条件，如果某个条件不满足，则不会去请求，如果满足发起请求\n> 2. 返回数据校验，防止数据出现`undefined`和`{}`, 的时候页面出现`TypeError`\n> 3. 组件处理: 不满足条件的时候禁止渲染该组件\n\n**解决方法**\n\n> 在最外层使用统一的数据处理方法，确保进入组件中的数据是自己想要的，同时在最外层的处理方法中对数据的可用性进行兜底判别，如果是`null` || `undefined`，进行兜底处理，返回一个空对象`{}`,否则对数据进行处理\n\n### `function`参数的边界值处理\n\n> 对于函数传递的参数，在函数内部一定要进行处理，边界值`0`, `null`, `undefined`等，防止极端情况下出错\n\n### iOS下fixed失效问题\n\n> iOS上面使用`fixed`布局在唤起键盘的时候`fixed`布局的组件会失效。\n> 解决方法： 对外层`div`设置\n```\nposition: absolute;\nwidth: 100%;\nleft: 0;\nright: 0;\ntop: 0;\nbottom: 0;\nfont-size: 0;\noverflow-y: scroll;\n-webkit-overflow-scrolling: touch;/* 解决ios滑动不流畅问题 */\n```\n> 让元素在内层`div`中滚动(不采用这种方式，页面是在`body`中滚动)\n\n### canvas 失真\n\n> 原因： 多发生在手机端，因为像素密度不一致导致失真\n\n```\nconst getPixelRatio = function(context) {\n    const backingStore = context.backingStorePixelRatio ||\n        context.webkitBackingStorePixelRatio ||\n        context.mozBackingStorePixelRatio ||\n        context.msBackingStorePixelRatio ||\n        context.oBackingStorePixelRatio || 1;\n\n    return (window.devicePixelRatio || 1) / backingStore;\n};\n```\n\n### ReactDOM -> findDOMNode\n\n> `findDOMNode(this).ownerDocument` 获取当前节点的HTML根节点\n\n\n###　js数组（new Array）是稀疏数组，无法map\n\n> `Array.apply(null, Array(n)).map(() => null)` // 初始化一个长度为N的数组并且赋值为null\n\n**apply** 会将生成的稀疏数组展开并传给上面`Array`构造函数\n\n```\nArray(n) === [,,...,,]; // 只有长度\nArray(null, ... , null)\n```\n\n> 上面的构造等于`new Array(n).fill(null)`\n\n### `React.PureComponent`和`this.forceUpdate()`\n\n> `React.PureComponent` 的 `shouldComponentUpdate()` 只会对对象进行浅对比。如果对象包含复杂的数据结构，它可能会因深层的数据不一致而产生错误的否定判断(表现为对象深层的数据已改变视图却没有更新)。当你期望只拥有简单的`props`和`state`时，才去继承 `PureComponent` ，或者在你知道深层的数据结构已经发生改变时使用 `forceUpate()` 。或者，考虑使用 不可变对象 来促进嵌套数据的快速比较！\n\n\n### `Windows` `git`大小写不敏感\n\n> `git config core.ignorecase false`\n### 关于结构赋值与`null`的问题\n``` javascript\n\nconst obj = {\n    a: null,\n    b: undefined,\n}\n\nconst {\n    a = [], b = {}\n} = obj;\nconsole.log(a, b);\n```\n> `node-sass`安装问题\n\n>> 需要安装`python`和`c++`编译环境\n>> `npm install --global --production windows-build-tools`\n\n### 滚动条\n\n> \n``` css\ndiv::-webkit-scrollbar {\n  /* 这里的宽是指竖向滚动条的宽，高是指横向滚动条的高*/      \n  width: 16px;      \n  height: 16px;      \n  background: pink;    \n}\ndiv::-webkit-scrollbar-thumb {      \n  border-radius: 10px;      \n  background: \n  linear-gradient(red,orange);    \n}\n```\n\n> 使用“&&”运算符的时候，如果两边的操作数有一个不是布尔类型，那么返回值不一定是布尔类型\n  1. 有一个是`null`， 则返回`null`\n  2. 有一个是`undefined`，则返回`undefined`\n  3. 第一个是对象，则返回第二个，为true，则返回第二个，为false，则返回false  \n\n> offsetWidth/offsetHeight\n>> CSS width 属性值 + 左右 padding + 左右 border + 垂直滚动条宽度 = offsetWidth\n>> CSS height 属性值 + 上下 padding + 上下 border + 水平滚动条高度 = offsetHeight\n\n** 这里列出需要关注的重点：**\n\n> * offsetWidth/offsetHeight 是只读属性，手动赋值虽不会报错，但也不会生效。所以，也就不能通过这两个属性动态的修改元素的宽高。\n> * offsetWidth/offsetHeight 返回值总是整数，而不是精确的浮点数，四舍五入取整数。\n若元素 display: none，那么 offsetWidth/offsetHeight 为 0。\n> * offsetHeight 的值不包括伪元素的高度，例如 :before 和 :after。\n若元素内部包含未清除浮动的子元素，那么将不包含这些浮动元素的宽高。\n\n\n# React区分组件类型\n> React的组件可以分为`ClassComponent`、`FunctionComponent`\n> `ClassComponent`对应的`Element type`是`当前Class`自身，`FunctionComponent`对应的`Element type`是函数组件自身\n\n``` javascript\nAppClass instanceof Function === true\nAppFunc instanceOf === true\n```\n> 通过引用类型是无法区分当前组件的`type`的\n> 可以通过调用`ClassComponent`原型链的`isReactComponent`属性判断是否是`classComponent`\n\n``` javascript\nClassComponent.prototype.isReactComponent = {}\n```\n\n# base64算法\n\n> 使用`4字节`替换`3字节`,文件大小会增长**1.33**",
+      "content": "\n### 关于非受控组件在异步操作中变更defaultValue信息的解决方案\n>> 可以增加一个key值\n\n\n### 正则:\n>> 手机号：`/^1(?:3\\d|4[4-9]|5[0-35-9]|6[67]|7[013-8]|8\\d|9\\d)\\d{8}$/`\n\n> fontSize会导致div所占实际区块变大（在inspector中无法找到，但是实际中是会覆盖掉其他div）\n\n\n\n### 代码执行顺序：\n> `macrotasks: setTimeout, setInterval, setImmediate, I/O, UI rendering`\n\n> `microtasks: process.nextTick, Promises, Object.observe(废弃), MutationObserver`\n\n\n> 同步代码——>microTask——>macroTask\n>> eg: `https://jakearchibald.com/2015/tasks-microtasks-queues-and-schedules/`\n\n> iOS问题   \n>> `text-decoration-line: line-through;` -> `text-decoration: line-through;`\n\n\n### 列表中的两种组件，排版出错\n>> `vertical-align: top;`\n\n### React-Router\n\n> 嵌套路由中次级路由无法生效， 确认一级路由与次级路由的衔接是否使用了`exact={true}`\n\n\n### 页面中的请求数据处理\n\n> 1. 判断是否需要这个请求的条件，如果某个条件不满足，则不会去请求，如果满足发起请求\n> 2. 返回数据校验，防止数据出现`undefined`和`{}`, 的时候页面出现`TypeError`\n> 3. 组件处理: 不满足条件的时候禁止渲染该组件\n\n**解决方法**\n\n> 在最外层使用统一的数据处理方法，确保进入组件中的数据是自己想要的，同时在最外层的处理方法中对数据的可用性进行兜底判别，如果是`null` || `undefined`，进行兜底处理，返回一个空对象`{}`,否则对数据进行处理\n\n### `function`参数的边界值处理\n\n> 对于函数传递的参数，在函数内部一定要进行处理，边界值`0`, `null`, `undefined`等，防止极端情况下出错\n\n### iOS下fixed失效问题\n\n> iOS上面使用`fixed`布局在唤起键盘的时候`fixed`布局的组件会失效。\n> 解决方法： 对外层`div`设置\n```\nposition: absolute;\nwidth: 100%;\nleft: 0;\nright: 0;\ntop: 0;\nbottom: 0;\nfont-size: 0;\noverflow-y: scroll;\n-webkit-overflow-scrolling: touch;/* 解决ios滑动不流畅问题 */\n```\n> 让元素在内层`div`中滚动(不采用这种方式，页面是在`body`中滚动)\n\n### canvas 失真\n\n> 原因： 多发生在手机端，因为像素密度不一致导致失真\n\n```\nconst getPixelRatio = function(context) {\n    const backingStore = context.backingStorePixelRatio ||\n        context.webkitBackingStorePixelRatio ||\n        context.mozBackingStorePixelRatio ||\n        context.msBackingStorePixelRatio ||\n        context.oBackingStorePixelRatio || 1;\n\n    return (window.devicePixelRatio || 1) / backingStore;\n};\n```\n\n### ReactDOM -> findDOMNode\n\n> `findDOMNode(this).ownerDocument` 获取当前节点的HTML根节点\n\n\n###　js数组（new Array）是稀疏数组，无法map\n\n> `Array.apply(null, Array(n)).map(() => null)` // 初始化一个长度为N的数组并且赋值为null\n\n**apply** 会将生成的稀疏数组展开并传给上面`Array`构造函数\n\n```\nArray(n) === [,,...,,]; // 只有长度\nArray(null, ... , null)\n```\n\n> 上面的构造等于`new Array(n).fill(null)`\n\n### `React.PureComponent`和`this.forceUpdate()`\n\n> `React.PureComponent` 的 `shouldComponentUpdate()` 只会对对象进行浅对比。如果对象包含复杂的数据结构，它可能会因深层的数据不一致而产生错误的否定判断(表现为对象深层的数据已改变视图却没有更新)。当你期望只拥有简单的`props`和`state`时，才去继承 `PureComponent` ，或者在你知道深层的数据结构已经发生改变时使用 `forceUpate()` 。或者，考虑使用 不可变对象 来促进嵌套数据的快速比较！\n\n\n### `Windows` `git`大小写不敏感\n\n> `git config core.ignorecase false`\n### 关于结构赋值与`null`的问题\n``` javascript\n\nconst obj = {\n    a: null,\n    b: undefined,\n}\n\nconst {\n    a = [], b = {}\n} = obj;\nconsole.log(a, b);\n```\n> `node-sass`安装问题\n\n>> 需要安装`python`和`c++`编译环境\n>> `npm install --global --production windows-build-tools`\n\n### 滚动条\n\n> \n``` css\ndiv::-webkit-scrollbar {\n  /* 这里的宽是指竖向滚动条的宽，高是指横向滚动条的高*/      \n  width: 16px;      \n  height: 16px;      \n  background: pink;    \n}\ndiv::-webkit-scrollbar-thumb {      \n  border-radius: 10px;      \n  background: \n  linear-gradient(red,orange);    \n}\n```\n\n> 使用“&&”运算符的时候，如果两边的操作数有一个不是布尔类型，那么返回值不一定是布尔类型\n  1. 有一个是`null`， 则返回`null`\n  2. 有一个是`undefined`，则返回`undefined`\n  3. 第一个是对象，则返回第二个，为true，则返回第二个，为false，则返回false  \n\n> offsetWidth/offsetHeight\n>> CSS width 属性值 + 左右 padding + 左右 border + 垂直滚动条宽度 = offsetWidth\n>> CSS height 属性值 + 上下 padding + 上下 border + 水平滚动条高度 = offsetHeight\n\n** 这里列出需要关注的重点：**\n\n> * offsetWidth/offsetHeight 是只读属性，手动赋值虽不会报错，但也不会生效。所以，也就不能通过这两个属性动态的修改元素的宽高。\n> * offsetWidth/offsetHeight 返回值总是整数，而不是精确的浮点数，四舍五入取整数。\n若元素 display: none，那么 offsetWidth/offsetHeight 为 0。\n> * offsetHeight 的值不包括伪元素的高度，例如 :before 和 :after。\n若元素内部包含未清除浮动的子元素，那么将不包含这些浮动元素的宽高。\n\n\n# React区分组件类型\n> React的组件可以分为`ClassComponent`、`FunctionComponent`\n> `ClassComponent`对应的`Element type`是`当前Class`自身，`FunctionComponent`对应的`Element type`是函数组件自身\n\n``` javascript\nAppClass instanceof Function === true\nAppFunc instanceOf === true\n```\n> 通过引用类型是无法区分当前组件的`type`的\n> 可以通过调用`ClassComponent`原型链的`isReactComponent`属性判断是否是`classComponent`\n\n``` javascript\nClassComponent.prototype.isReactComponent = {}\n```\n\n# base64算法\n\n> 使用`4字节`替换`3字节`,文件大小会增长**1.33**\n\n\n## 双数组取交集\n> 返回结果的顺序和第一次遍历的数组相关；基本是第一次数组的顺序",
       "data": {
         "title": "一些问题",
         "date": "2020-05-22 18:13:19",
@@ -349,6 +383,12 @@
   ],
   "tags": [
     {
+      "index": -1,
+      "name": "Rust",
+      "slug": "uDnwdNXwe",
+      "used": true
+    },
+    {
       "name": "React",
       "slug": "Bo2MqkwLq",
       "used": true
@@ -391,6 +431,18 @@
       "index": -1,
       "name": "数据上报",
       "slug": "ECkt7EOIF",
+      "used": false
+    },
+    {
+      "index": -1,
+      "name": "Nas",
+      "slug": "sE_DhLhAc",
+      "used": false
+    },
+    {
+      "index": -1,
+      "name": "捡垃圾",
+      "slug": "Cqu0Vayg9",
       "used": false
     }
   ],
